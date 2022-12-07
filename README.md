@@ -15,5 +15,4 @@ GoogleDriveの"Colab Notebooks"ディレクトリとも同期させていきま�
 [ssh](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/method4colab_ssh.ipynb)
 > この方法は GoogleColaboratory の利用規約により禁止されています。あくまでも技術学習の参考としてください。
 
----
 
