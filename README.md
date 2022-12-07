@@ -12,3 +12,7 @@ GoogleDriveの"Colab Notebooks"ディレクトリとも同期させていきま�
 
 ---
 (2022-11-15)
+
+
+[ssh](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/method4colab_ssh.ipynb)
+
