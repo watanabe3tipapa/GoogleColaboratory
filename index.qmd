@@ -1,6 +1,7 @@
 ---
 title: "Google Colaboratory Archives "
 format: html
+css: styles.css
 ---
 
 ::: callout-note
@@ -10,7 +11,7 @@ format: html
 ## Files
 
 |   | Files | 用途 |
-|-------------------|-------------------|------------------------------------|
+|-------------------|-------------------|----------------------------------|
 | 1 | [Colab接続](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/BaseGitHub2GoogleColaboratory.ipynb) | GitHub上のファイルをColabから直接実行する下準備。 |
 | 2 | [インターネット公告（simple）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023_09_07.ipynb) | インターネット公告 |
 | 3 | [インターネット公告（chat）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023%E2%88%9209_07_chat_by_Go.ipynb) | インターネット公告 |

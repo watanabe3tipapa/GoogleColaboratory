@@ -5,5 +5,6 @@ output-dir: docs
 format:
   html:
     theme: spacelab
+    css: styles.css
 
 editor: visual
