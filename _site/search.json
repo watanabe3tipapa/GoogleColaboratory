@@ -25,7 +25,7 @@
     "href": "index.html#files",
     "title": "Google Colaboratory Archives",
     "section": "Files",
-    "text": "Files\n\n\n\n\nFiles\n用途\n\n\n\n\n1\nColab接続\nGitHub上のファイルをColabから直接実行する下準備。\n\n\n2\nインターネット公告（simple）\nインターネット公告\n\n\n3\nインターネット公告（chat）\nインターネット公告\n\n\n4\nインターネット公告（no-talk）\nインターネット公告\n\n\n5\nColab - SSH\n今は「禁じ手」。学習用にしてください。\n\n\n6\n路線と駅名を調べる\n各都道府県の鉄道路線を探査。路線の駅名と駅の緯度・経度情報を取得できます。\n\n\n7\n・・・\n・・・\n\n\n8\n・・・\n・・・\n\n\n\n\nThis is a simple site created with Quarto."
+    "text": "Files\n\n\n\n\nFiles\n用途\n\n\n\n\n\n1\nColab接続\nGitHub上のファイルをColabから直接実行する下準備。\n\n\n\n2\nインターネット公告（simple）\nインターネット公告\n\n\n\n3\nインターネット公告（chat）\nインターネット公告\n\n\n\n4\nインターネット公告（no-talk）\nインターネット公告\n\n\n\n5\nColab - SSH\n今は「禁じ手」。学習用にしてください。\n\n\n\n6\n路線と駅名を調べる\n各都道府県の鉄道路線を探査。路線の駅名と駅の緯度・経度情報を取得できます。\n\n\n\n7\n・・・\n・・・\n\n\n\n8\n・・・\n・・・\n\n\n\n\n\nThis is a simple site created with Quarto."
   },
   {
     "objectID": "BaseGitHub2GoogleColaboratory.html",

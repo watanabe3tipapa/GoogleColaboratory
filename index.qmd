@@ -10,16 +10,16 @@ css: styles.css
 
 ## Files
 
-|   | Files | 用途 |
-|-------------------|-------------------|----------------------------------|
-| 1 | [Colab接続](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/BaseGitHub2GoogleColaboratory.ipynb) | GitHub上のファイルをColabから直接実行する下準備。 |
-| 2 | [インターネット公告（simple）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023_09_07.ipynb) | インターネット公告 |
-| 3 | [インターネット公告（chat）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023%E2%88%9209_07_chat_by_Go.ipynb) | インターネット公告 |
-| 4 | [インターネット公告（no-talk）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023%E2%88%9209_07_notalk_by_Go.ipynb) | インターネット公告 |
-| 5 | [Colab - SSH](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/method4colab_ssh.ipynb) | 今は「禁じ手」。学習用にしてください。 |
-| 6 | [路線と駅名を調べる](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/getrails.ipynb) | 各都道府県の鉄道路線を探査。路線の駅名と駅の緯度・経度情報を取得できます。 |
-| 7 | ・・・ | ・・・ |
-| 8 | ・・・ | ・・・ |
+|   | Files | 用途 |   |
+|-------------|-------------------|---------------|-------------|
+| 1 | [Colab接続](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/BaseGitHub2GoogleColaboratory.ipynb) | GitHub上のファイルをColabから直接実行する下準備。 | ![](assets/IMG_colab_access.jpg){width="380"} |
+| 2 | [インターネット公告（simple）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023_09_07.ipynb) | インターネット公告 |  |
+| 3 | [インターネット公告（chat）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023%E2%88%9209_07_chat_by_Go.ipynb) | インターネット公告 |  |
+| 4 | [インターネット公告（no-talk）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/telnets_2023%E2%88%9209_07_notalk_by_Go.ipynb) | インターネット公告 |  |
+| 5 | [Colab - SSH](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/method4colab_ssh.ipynb) | 今は「禁じ手」。学習用にしてください。 |  |
+| 6 | [路線と駅名を調べる](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/getrails.ipynb) | 各都道府県の鉄道路線を探査。路線の駅名と駅の緯度・経度情報を取得できます。 |  |
+| 7 | ・・・ | ・・・ |  |
+| 8 | ・・・ | ・・・ |  |
 
 ------------------------------------------------------------------------
 
