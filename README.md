@@ -10,24 +10,28 @@
 
 主な内容
 
-- .ipynb ノートブック群（いくつかは root ディレクトリに配置されています）
+- カテゴリー別の .ipynb ノートブック群（下記「ディレクトリ構成」参照）
 - index.qmd / Quarto 関連ファイル
 - LICENSE.md（ライセンス情報はこのファイルをご確認ください）
 
-主なファイル（一部）
+ディレクトリ構成
 
-- BaseGitHub2GoogleColaboratory.ipynb
-- getrails.ipynb
-- method4colab_ssh.ipynb
-- telnets_2023_09_07.ipynb
-- telnets_2023−09_07_chat_by_Go.ipynb
-- telnets_2023−09_07_notalk_by_Go.ipynb
-- index.qmd, _quarto.yml, _site, assets
-- LICENSE.md
+- `setup/` … Colab の準備
+  - BaseGitHub2GoogleColaboratory.ipynb
+  - method4colab_ssh.ipynb
+- `network/` … ネットワーク
+  - telnets_2023_09_07.ipynb
+  - telnets_2023−09_07_chat_by_Go.ipynb
+  - telnets_2023−09_07_notalk_by_Go.ipynb
+- `data/` … データ処理
+  - getrails.ipynb
+- `llm/` … LLM
+  - strata_colab_guide.ipynb
+- ルート … index.qmd, _quarto.yml, _site, assets, LICENSE.md
 
 利用上の注意
 
-- method4colab_ssh.ipynb に記載された「ssh を使う方法」については、README 内でも注意がある通り、Google Colaboratory の利用規約により禁止されているとされています。当該ノートブックは技術学習の参考として扱ってください（該当ノートブックの参照: https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/method4colab_ssh.ipynb）。
+- setup/method4colab_ssh.ipynb に記載された「ssh を使う方法」については、README 内でも注意がある通り、Google Colaboratory の利用規約により禁止されているとされています。当該ノートブックは技術学習の参考として扱ってください（該当ノートブックの参照: https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb）。
 
 履歴・状態
 
@@ -42,7 +46,7 @@
 参照リンク
 
 - リポジトリ・ホームページ: https://watanabe3tipapa.github.io/GoogleColaboratory/
-- method4colab_ssh.ipynb（リポジトリ内）: https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/method4colab_ssh.ipynb
+- setup/method4colab_ssh.ipynb（リポジトリ内）: https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb
 - Colab デモ（バッジ先、外部リポジトリ）: https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb
 
 補足

@@ -1,6 +1,14 @@
 project:
   type: website
-output-dir: docs
+  output-dir: _site
+
+website:
+  title: "Google Colaboratory Archives"
+  site-url: https://watanabe3tipapa.github.io/GoogleColaboratory/
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
 
 format:
   html:
