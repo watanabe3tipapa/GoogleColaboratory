@@ -19,6 +19,9 @@ Google Colab で使用したノートブックと技術ガイドを、用途ご�
 | mcp | [colab-mcp-cms-guide.html](mcp/colab-mcp-cms-guide.html) | Colab MCP Server を Web 公開し、PWA から CMS を構成するガイド | [読む](mcp/colab-mcp-cms-guide.html) |
 | mcp | [colab_mcp_marimo_pwa_architecture.html](mcp/colab_mcp_marimo_pwa_architecture.html) | Colab MCP × marimo × PWA の連携アーキテクチャ調査 | [読む](mcp/colab_mcp_marimo_pwa_architecture.html) |
 | mcp | [pwa-colab-connection-guide.html](mcp/pwa-colab-connection-guide.html) | PWA から Colab の GPU / TPU を活用する接続ガイド | [読む](mcp/pwa-colab-connection-guide.html) |
+| mcp | [colab_mcp_cms_guide.ipynb](mcp/colab_mcp_cms_guide.ipynb) | CMS ガイドのノートブック版 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_mcp_cms_guide.ipynb) |
+| mcp | [colab_mcp_marimo_pwa_architecture.ipynb](mcp/colab_mcp_marimo_pwa_architecture.ipynb) | marimo × PWA 調査のノートブック版 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_mcp_marimo_pwa_architecture.ipynb) |
+| mcp | [pwa_colab_connection_guide.ipynb](mcp/pwa_colab_connection_guide.ipynb) | PWA 接続ガイドのノートブック版 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/pwa_colab_connection_guide.ipynb) |
 | mcp | [colab_gui_desktop.ipynb](mcp/colab_gui_desktop.ipynb) | 仮想デスクトップ＋ブラウザ自動化デモ | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_gui_desktop.ipynb) |
 
 ## ディレクトリ構成

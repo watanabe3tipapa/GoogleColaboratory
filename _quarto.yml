@@ -3,6 +3,13 @@ project:
   output-dir: _site
   resources:
     - "mcp/*.html"
+  render:
+    - "**/*.qmd"
+    - "**/*.ipynb"
+    - "LICENSE.md"
+    - "!mcp/colab_mcp_cms_guide.ipynb"
+    - "!mcp/colab_mcp_marimo_pwa_architecture.ipynb"
+    - "!mcp/pwa_colab_connection_guide.ipynb"
 
 lang: ja
 
