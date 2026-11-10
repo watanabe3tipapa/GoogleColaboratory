@@ -1,40 +1,190 @@
 ---
-title: "Google Colaboratory Archives "
-format: html
-css: styles.css
+format:
+  html:
+    page-layout: full
 ---
 
-::: callout-note
-## ワークショップなどで使用したものを陳列します
-:::
+```{=html}
+<div class="lp">
 
-## Colab の準備（setup/）
+<header class="hero">
+  <div class="hero-eyebrow">ls -la ./notebooks</div>
+  <h1 class="hero-title">Google Colab<br>Archives</h1>
+  <p class="hero-lead">ワークショップや実験で使った Google Colab ノートブックを、カテゴリー別に陳列したアーカイブです。気になるノートブックは、そのまま Colab で開いて実行できます。</p>
+  <div class="hero-meta">
+    <span class="meta-pill"><span class="dot"></span>公開中: <strong>7</strong> ノートブック</span>
+    <span class="meta-pill"><strong>4</strong> カテゴリ</span>
+    <span class="meta-pill">Quarto + GitHub Pages</span>
+  </div>
+</header>
 
-| Files | 用途 |
-|-------------------|---------------|
-| [Colab接続](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/BaseGitHub2GoogleColaboratory.ipynb) | GitHub上のファイルをColabから直接実行する下準備。 ![](assets/IMG_colab_access.jpg){width="380"} |
-| [Colab - SSH](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb) | 今は「禁じ手」。学習用にしてください。 |
+<section class="update-panel success" aria-label="アーカイブ状況">
+  <div class="update-panel-top">
+    <div>
+      <p class="panel-kicker">ARCHIVE STATUS</p>
+      <h2>すべてのノートブックを公開中です</h2>
+      <p class="panel-copy">main ブランチへの push をきっかけに、GitHub Actions がサイトを自動デプロイします。</p>
+    </div>
+    <div class="update-metrics">
+      <div class="metric"><span>収録</span><strong>7</strong></div>
+      <div class="metric"><span>カテゴリ</span><strong>4</strong></div>
+    </div>
+  </div>
+  <div class="change-area">
+    <h3>カテゴリー一覧</h3>
+    <ul class="change-list">
+      <li class="change-row"><span class="change-badge">setup</span><strong>Colab の準備</strong><span class="change-version"><span class="version-chip">2 件</span></span></li>
+      <li class="change-row"><span class="change-badge">network</span><strong>ネットワーク</strong><span class="change-version"><span class="version-chip">3 件</span></span></li>
+      <li class="change-row"><span class="change-badge">data</span><strong>データ処理</strong><span class="change-version"><span class="version-chip">1 件</span></span></li>
+      <li class="change-row"><span class="change-badge">llm</span><strong>LLM</strong><span class="change-version"><span class="version-chip">1 件</span></span></li>
+    </ul>
+  </div>
+</section>
 
-## ネットワーク（network/）
+<section class="section" id="setup">
+  <div class="section-header">
+    <h2 class="section-title"><span class="section-number">01</span>Colab の準備</h2>
+    <p class="section-desc">Colab と GitHub をつなぐための下準備</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">BaseGitHub2<wbr>Google<wbr>Colaboratory <span class="tag">setup</span></h3>
+      </div>
+      <p class="card-body">GitHub 上のノートブックを Colab から直接実行するための下準備。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Run</span><strong>Google Colab</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/setup/BaseGitHub2GoogleColaboratory.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/BaseGitHub2GoogleColaboratory.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> setup/<wbr>BaseGitHub2GoogleColaboratory.ipynb</div>
+    </article>
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">method4colab_ssh <span class="tag warn">非推奨</span></h3>
+      </div>
+      <p class="card-body">Colab に SSH 接続する方法。現在は利用規約で禁止されているため、学習用の参考としてのみ扱ってください。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Status</span><strong>参考</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> setup/method4colab_ssh.ipynb</div>
+    </article>
+  </div>
+</section>
 
-| Files | 用途 |
-|-------------------|---------------|
-| [インターネット公告（simple）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023_09_07.ipynb) | インターネット公告 |
-| [インターネット公告（chat）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_chat_by_Go.ipynb) | インターネット公告 |
-| [インターネット公告（no-talk）](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_notalk_by_Go.ipynb) | インターネット公告 |
+<section class="section" id="network">
+  <div class="section-header">
+    <h2 class="section-title"><span class="section-number">02</span>ネットワーク</h2>
+    <p class="section-desc">インターネット公告のサンプル</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">telnets_2023_09_07 <span class="tag">simple</span></h3>
+      </div>
+      <p class="card-body">インターネット公告のサンプル。シンプル版。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Type</span><strong>公告</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023_09_07.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023_09_07.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> network/telnets_2023_09_07.ipynb</div>
+    </article>
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">telnets_2023−09_07_<wbr>chat_by_Go <span class="tag">chat</span></h3>
+      </div>
+      <p class="card-body">インターネット公告のサンプル。チャット版。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Type</span><strong>公告</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_chat_by_Go.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_chat_by_Go.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> network/<wbr>telnets_2023−09_07_chat_by_Go.ipynb</div>
+    </article>
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">telnets_2023−09_07_<wbr>notalk_by_Go <span class="tag">no-talk</span></h3>
+      </div>
+      <p class="card-body">インターネット公告のサンプル。発話なし版。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Type</span><strong>公告</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_notalk_by_Go.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_notalk_by_Go.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> network/<wbr>telnets_2023−09_07_notalk_by_Go.ipynb</div>
+    </article>
+  </div>
+</section>
 
-## データ処理（data/）
+<section class="section" id="data">
+  <div class="section-header">
+    <h2 class="section-title"><span class="section-number">03</span>データ処理</h2>
+    <p class="section-desc">鉄道路線と駅データを集める</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">getrails <span class="tag">data</span></h3>
+      </div>
+      <p class="card-body">各都道府県の鉄道路線を探査し、路線の駅名と駅の緯度・経度情報を取得します。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Output</span><strong>駅データ</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/data/getrails.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/data/getrails.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> data/getrails.ipynb</div>
+    </article>
+  </div>
+</section>
 
-| Files | 用途 |
-|-------------------|---------------|
-| [路線と駅名を調べる](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/data/getrails.ipynb) | 各都道府県の鉄道路線を探査。路線の駅名と駅の緯度・経度情報を取得できます。 |
+<section class="section" id="llm">
+  <div class="section-header">
+    <h2 class="section-title"><span class="section-number">04</span>LLM</h2>
+    <p class="section-desc">Colab 上で推論エンジンを動かす</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">strata_colab_guide <span class="tag">llm</span></h3>
+      </div>
+      <p class="card-body">Colab 上で Strata 推論エンジンをセットアップし、OpenAI 互換 API でチャットする手順。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">GPU</span><strong>L4 / A100 推奨</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/llm/strata_colab_guide.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/llm/strata_colab_guide.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> llm/strata_colab_guide.ipynb</div>
+    </article>
+  </div>
+</section>
 
-## LLM（llm/）
+<footer class="page-footer">
+  <span class="prompt">$</span> Google Colaboratory Archives — Quarto + GitHub Pages
+</footer>
 
-| Files | 用途 |
-|-------------------|---------------|
-| [Strata を Colab で動かす](https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/llm/strata_colab_guide.ipynb) | Colab 上で Strata 推論エンジンをセットアップし、OpenAI 互換 API でチャットする手順。 |
-
-------------------------------------------------------------------------
-
-This is a simple site created with Quarto.
+</div>
+```

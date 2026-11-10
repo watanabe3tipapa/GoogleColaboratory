@@ -2,6 +2,8 @@ project:
   type: website
   output-dir: _site
 
+lang: ja
+
 website:
   title: "Google Colaboratory Archives"
   site-url: https://watanabe3tipapa.github.io/GoogleColaboratory/

@@ -114,36 +114,8 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Google Colaboratory Archives",
+    "title": "Google ColabArchives",
     "section": "",
-    "text": "Noteワークショップなどで使用したものを陳列します"
-  },
-  {
-    "objectID": "index.html#colab-の準備setup",
-    "href": "index.html#colab-の準備setup",
-    "title": "Google Colaboratory Archives",
-    "section": "Colab の準備（setup/）",
-    "text": "Colab の準備（setup/）\n\n\n\nFiles\n用途\n\n\n\n\nColab接続\nGitHub上のファイルをColabから直接実行する下準備。 \n\n\nColab - SSH\n今は「禁じ手」。学習用にしてください。"
-  },
-  {
-    "objectID": "index.html#ネットワークnetwork",
-    "href": "index.html#ネットワークnetwork",
-    "title": "Google Colaboratory Archives",
-    "section": "ネットワーク（network/）",
-    "text": "ネットワーク（network/）\n\n\n\nFiles\n用途\n\n\n\n\nインターネット公告（simple）\nインターネット公告\n\n\nインターネット公告（chat）\nインターネット公告\n\n\nインターネット公告（no-talk）\nインターネット公告"
-  },
-  {
-    "objectID": "index.html#データ処理data",
-    "href": "index.html#データ処理data",
-    "title": "Google Colaboratory Archives",
-    "section": "データ処理（data/）",
-    "text": "データ処理（data/）\n\n\n\nFiles\n用途\n\n\n\n\n路線と駅名を調べる\n各都道府県の鉄道路線を探査。路線の駅名と駅の緯度・経度情報を取得できます。"
-  },
-  {
-    "objectID": "index.html#llmllm",
-    "href": "index.html#llmllm",
-    "title": "Google Colaboratory Archives",
-    "section": "LLM（llm/）",
-    "text": "LLM（llm/）\n\n\n\nFiles\n用途\n\n\n\n\nStrata を Colab で動かす\nColab 上で Strata 推論エンジンをセットアップし、OpenAI 互換 API でチャットする手順。\n\n\n\n\nThis is a simple site created with Quarto."
+    "text": "ls -la ./notebooks\n  Google ColabArchives\n  ワークショップや実験で使った Google Colab ノートブックを、カテゴリー別に陳列したアーカイブです。気になるノートブックは、そのまま Colab で開いて実行できます。\n  \n    公開中: 7 ノートブック\n    4 カテゴリ\n    Quarto + GitHub Pages\n  \n\n\n\n  \n    \n      ARCHIVE STATUS\n      すべてのノートブックを公開中です\n      main ブランチへの push をきっかけに、GitHub Actions がサイトを自動デプロイします。\n    \n    \n      収録7\n      カテゴリ4\n    \n  \n  \n    カテゴリー一覧\n    \n      setupColab の準備2 件\n      networkネットワーク3 件\n      dataデータ処理1 件\n      llmLLM1 件\n    \n  \n\n\n\n  \n    01Colab の準備\n    Colab と GitHub をつなぐための下準備\n  \n  \n    \n      \n        BaseGitHub2GoogleColaboratory setup\n      \n      GitHub 上のノートブックを Colab から直接実行するための下準備。\n      \n        Format.ipynb\n        RunGoogle Colab\n      \n      \n        colab ↗\n        github ↗\n      \n      $ setup/BaseGitHub2GoogleColaboratory.ipynb\n    \n    \n      \n        method4colab_ssh 非推奨\n      \n      Colab に SSH 接続する方法。現在は利用規約で禁止されているため、学習用の参考としてのみ扱ってください。\n      \n        Format.ipynb\n        Status参考\n      \n      \n        colab ↗\n        github ↗\n      \n      $ setup/method4colab_ssh.ipynb\n    \n  \n\n\n\n  \n    02ネットワーク\n    インターネット公告のサンプル\n  \n  \n    \n      \n        telnets_2023_09_07 simple\n      \n      インターネット公告のサンプル。シンプル版。\n      \n        Format.ipynb\n        Type公告\n      \n      \n        colab ↗\n        github ↗\n      \n      $ network/telnets_2023_09_07.ipynb\n    \n    \n      \n        telnets_2023−09_07_chat_by_Go chat\n      \n      インターネット公告のサンプル。チャット版。\n      \n        Format.ipynb\n        Type公告\n      \n      \n        colab ↗\n        github ↗\n      \n      $ network/telnets_2023−09_07_chat_by_Go.ipynb\n    \n    \n      \n        telnets_2023−09_07_notalk_by_Go no-talk\n      \n      インターネット公告のサンプル。発話なし版。\n      \n        Format.ipynb\n        Type公告\n      \n      \n        colab ↗\n        github ↗\n      \n      $ network/telnets_2023−09_07_notalk_by_Go.ipynb\n    \n  \n\n\n\n  \n    03データ処理\n    鉄道路線と駅データを集める\n  \n  \n    \n      \n        getrails data\n      \n      各都道府県の鉄道路線を探査し、路線の駅名と駅の緯度・経度情報を取得します。\n      \n        Format.ipynb\n        Output駅データ\n      \n      \n        colab ↗\n        github ↗\n      \n      $ data/getrails.ipynb\n    \n  \n\n\n\n  \n    04LLM\n    Colab 上で推論エンジンを動かす\n  \n  \n    \n      \n        strata_colab_guide llm\n      \n      Colab 上で Strata 推論エンジンをセットアップし、OpenAI 互換 API でチャットする手順。\n      \n        Format.ipynb\n        GPUL4 / A100 推奨\n      \n      \n        colab ↗\n        github ↗\n      \n      $ llm/strata_colab_guide.ipynb\n    \n  \n\n\n\n  $ Google Colaboratory Archives — Quarto + GitHub Pages"
   }
 ]
