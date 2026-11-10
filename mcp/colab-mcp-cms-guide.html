@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colab MCP Server を Web サーバーとして公開し、PWA クライアントから CMS を構成する手法</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --ink: #1a1a2e;
+  --muted: #5a6578;
+  --accent: #2563eb;
+  --accent-weak: color-mix(in oklab, var(--accent) 8%, var(--surface));
+  --accent-mid: color-mix(in oklab, var(--accent) 20%, var(--surface));
+  --line: color-mix(in oklab, var(--ink) 8%, transparent);
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --step--1: clamp(0.85rem, 0.82rem + 0.15vw, 0.95rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.1rem + 0.75vw, 1.65rem);
+  --step-2: clamp(1.65rem, 1.35rem + 1.5vw, 2.5rem);
+  --step-3: clamp(2.2rem, 1.7rem + 2.5vw, 3.5rem);
+  --space: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px -10px rgba(0,0,0,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.85;
+  color: var(--ink);
+  background: var(--bg);
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Header */
+header {
+  background: linear-gradient(160deg, var(--ink) 0%, #16213e 60%, #0f3460 100%);
+  color: #fff;
+  padding: calc(var(--space) * 2.5) var(--space);
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(37,99,235,0.15) 0%, transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(5,150,105,0.1) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.header-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+header h1 {
+  font-size: var(--step-3);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6em;
+}
+
+header .subtitle {
+  font-size: var(--step-0);
+  color: rgba(255,255,255,0.75);
+  font-weight: 300;
+  max-width: 60ch;
+}
+
+header .meta {
+  margin-top: 1.5em;
+  font-size: var(--step--1);
+  color: rgba(255,255,255,0.5);
+}
+
+/* Layout */
+main {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: var(--space);
+}
+
+section {
+  margin-bottom: calc(var(--space) * 1.8);
+}
+
+/* Section numbering signature */
+section {
+  position: relative;
+  padding-left: 3.2rem;
+}
+
+.section-num {
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-weak);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.9em;
+  font-family: "JetBrains Mono", monospace;
+  border: 1.5px solid color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+h2 {
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 0.7em;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--step-1);
+  font-weight: 700;
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+  color: var(--ink);
+}
+
+h4 {
+  font-size: var(--step-0);
+  font-weight: 700;
+  margin-top: 1.3em;
+  margin-bottom: 0.4em;
+  color: var(--muted);
+}
+
+p {
+  margin-bottom: 1em;
+  max-width: 68ch;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 0.9);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  margin-bottom: 1.2rem;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: var(--step-0);
+  margin-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.card-title .icon {
+  width: 1.5em;
+  height: 1.5em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--accent-weak);
+  color: var(--accent);
+  font-size: 0.85em;
+}
+
+/* Architecture diagram */
+.arch-diagram {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 0.8);
+  border: 1px solid var(--line);
+  font-family: "JetBrains Mono", monospace;
+  font-size: var(--step--1);
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--muted);
+  margin: 1.2rem 0;
+}
+
+.arch-diagram .box-pwa { color: var(--accent); font-weight: 500; }
+.arch-diagram .box-pub { color: var(--warning); font-weight: 500; }
+.arch-diagram .box-colab { color: var(--success); font-weight: 500; }
+.arch-diagram .arrow { color: var(--line); }
+
+/* Code blocks */
+pre {
+  background: #1e1e2e;
+  color: #e2e8f0;
+  border-radius: var(--radius);
+  padding: 1.2rem 1.4rem;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88em;
+  line-height: 1.7;
+  margin: 1.2rem 0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+}
+
+:not(pre) > code {
+  background: var(--accent-weak);
+  color: var(--accent);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-size: 0.88em;
+  word-break: break-all;
+}
+
+/* Syntax coloring */
+.kw { color: #c678dd; }   /* keyword */
+.fn { color: #61afef; }   /* function */
+.str { color: #98c379; }  /* string */
+.cmt { color: #5c6370; font-style: italic; } /* comment */
+.num { color: #d19a66; }  /* number */
+.cls { color: #e5c07b; }  /* class */
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: var(--step--1);
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  background: var(--accent-weak);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+tr:last-child td { border-bottom: none; }
+
+tr:hover td { background: rgba(37,99,235,0.03); }
+
+/* Lists */
+ul, ol {
+  margin: 0.8rem 0 1rem 1.5rem;
+  padding-left: 0.5rem;
+}
+
+li { margin-bottom: 0.4em; }
+
+/* Callouts */
+.callout {
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  border-left: 4px solid;
+  font-size: var(--step--1);
+}
+
+.callout-info {
+  background: var(--accent-weak);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.callout-warn {
+  background: #fffbeb;
+  border-color: var(--warning);
+  color: #92400e;
+}
+
+.callout-danger {
+  background: #fef2f2;
+  border-color: var(--danger);
+  color: #991b1b;
+}
+
+.callout-success {
+  background: #ecfdf5;
+  border-color: var(--success);
+  color: #065f46;
+}
+
+.callout-title {
+  font-weight: 700;
+  margin-bottom: 0.3em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  font-size: 0.78em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.tag-blue { background: var(--accent-weak); color: var(--accent); }
+.tag-green { background: #d1fae5; color: var(--success); }
+.tag-amber { background: #fef3c7; color: #92400e; }
+.tag-red { background: #fee2e2; color: var(--danger); }
+
+/* Source chips */
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: 0.78em;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--line);
+  padding-bottom: 0.1em;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.source-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: calc(var(--space) * 1.5) var(--space);
+  color: var(--muted);
+  font-size: var(--step--1);
+  border-top: 1px solid var(--line);
+  margin-top: calc(var(--space) * 2);
+}
+
+/* Print */
+@media print {
+  body { background: #fff; }
+  header { background: #1a1a2e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card, table, pre, .callout { box-shadow: none; border: 1px solid #ddd; }
+  .arch-diagram { border: 1px solid #ddd; }
+}
+
+@page { size: A4; margin: 16mm; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  section { padding-left: 0; }
+  .section-num {
+    position: static;
+    display: inline-flex;
+    margin-right: 0.5em;
+    margin-bottom: 0.3em;
+    vertical-align: middle;
+  }
+  h2 { display: flex; align-items: center; flex-wrap: wrap; gap: 0.3em; }
+  .arch-diagram { font-size: 0.75em; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Colab MCP Server を Web サーバーとして公開し、PWA クライアントから CMS を構成する手法</h1>
+    <p class="subtitle">Google Colab 上の MCP Server を Streamable HTTP 対応の Web サービスとしてトンネリング公開し、Progressive Web App（PWA）クライアントからコンテンツ管理システム（CMS）を構築する完全ガイド。</p>
+    <p class="meta">最終更新: 2026年9月8日</p>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <span class="section-num">1</span>
+  <h2>全体アーキテクチャ</h2>
+  <p>本手法は、Google Colab の一時的な実行環境を「ヘッドレス CMS バックエンド」として位置づけ、PWA クライアントから Model Context Protocol（MCP）を介してコンテンツを管理する構成です。公式の <code>googlecolab/colab-mcp</code> は stdio トランスポートを前提したローカルエージェント向け設計であるため、PWA から直接利用するには <strong>HTTP / SSE / Streamable HTTP 対応の MCP Server を Colab 上に新規構築（またはラップ）</strong>する必要があります。</p>
+
+  <div class="arch-diagram">
+<span class="box-pwa">┌─────────────────┐</span>         <span class="box-pub">┌─────────────────────────────┐</span>         <span class="box-colab">┌─────────────────┐</span>
+<span class="box-pwa">│   PWA (Client)  │</span> <span class="arrow">◄─────►</span> <span class="box-pub">│  Public URL (ngrok etc.)  │</span> <span class="arrow">◄─────►</span> <span class="box-colab">│ Google Colab    │</span>
+<span class="box-pwa">│  - React/Vue    │</span>  <span class="arrow">HTTP</span>  <span class="box-pub">│  - Streamable HTTP / SSE    │</span>  <span class="arrow">Tunnel</span>  <span class="box-colab">│ - FastAPI       │</span>
+<span class="box-pwa">│  - ServiceWorker│</span>  <span class="arrow">MCP</span>   <span class="box-pub">│  - CORS enabled             │</span>         <span class="box-colab">│ - MCP Server    │</span>
+<span class="box-pwa">│  - IndexedDB    │</span>         <span class="box-pub">│  - Bearer/OAuth auth        │</span>         <span class="box-colab">│ - CMS Tools     │</span>
+<span class="box-pwa">└─────────────────┘</span>         <span class="box-pub">└─────────────────────────────┘</span>         <span class="box-colab">│ - Google Drive  │</span>
+                                                                      <span class="box-colab">│   (persistence) │</span>
+                                                                      <span class="box-colab">└─────────────────┘</span>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">ポイント</div>
+    Colab のセッションは一時的ですが、記事データを Google Drive に JSON 形式で永続化することで、セッション切断後もデータを保持できます。MCP の Streamable HTTP トランスポートにより、PWA は標準的な HTTP 通信でサーバーとやり取りできます。
+  </div>
+</section>
+
+<section>
+  <span class="section-num">2</span>
+  <h2>バックエンド: Colab 上の MCP Web サーバー</h2>
+
+  <h3>2.1 必要なライブラリ</h3>
+  <p>Colab ノートブックのセルで以下を実行し、FastAPI と FastMCP、トンネリング用の pyngrok をインストールします。</p>
+
+<pre><code><span class="cmt"># Colab セルで実行</span>
+!pip install fastapi uvicorn fastmcp pyngrok</code></pre>
+
+  <h3>2.2 FastAPI + FastMCP で Streamable HTTP Server を構築</h3>
+  <p><code>fastmcp</code> と <code>FastAPI</code> を組み合わせ、MCP Server を Web アプリとしてマウントします。以下は、記事の CRUD とメディア管理を備えた CMS ツールを定義した完全な実装例です。</p>
+
+<pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI, Depends, HTTPException, Header
+<span class="kw">from</span> fastapi.middleware.cors <span class="kw">import</span> CORSMiddleware
+<span class="kw">from</span> fastmcp <span class="kw">import</span> FastMCP
+<span class="kw">from</span> fastmcp.integrations.fastapi <span class="kw">import</span> mount_mcp
+<span class="kw">import</span> uvicorn
+<span class="kw">import</span> json
+<span class="kw">import</span> os
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+<span class="kw">from</span> google.colab <span class="kw">import</span> drive
+
+<span class="cmt"># Google Drive をマウント（永続化用）</span>
+drive.mount(<span class="str">'/content/drive'</span>)
+CMS_DIR = <span class="str">"/content/drive/MyDrive/cms_data"</span>
+os.makedirs(CMS_DIR, exist_ok=<span class="kw">True</span>)
+
+app = FastAPI(title=<span class="str">"Colab CMS MCP Server"</span>)
+
+<span class="cmt"># CORS: PWA からのアクセスを許可</span>
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[<span class="str">"*"</span>],  <span class="cmt"># 本番では PWA のドメインのみに制限</span>
+    allow_credentials=<span class="kw">True</span>,
+    allow_methods=[<span class="str">"*"</span>],
+    allow_headers=[<span class="str">"*"</span>],
+)
+
+<span class="cmt"># MCP Server 定義</span>
+mcp = FastMCP(<span class="str">"ColabCMS"</span>)
+
+<span class="cmt"># ========================</span>
+<span class="cmt"># CMS Tools (MCP)</span>
+<span class="cmt"># ========================</span>
+
+<span class="kw">@mcp.tool</span>()
+<span class="kw">def</span> <span class="fn">list_posts</span>() -> <span class="cls">str</span>:
+    <span class="str">"""記事一覧を取得"""</span>
+    posts = []
+    <span class="kw">for</span> fname <span class="kw">in</span> os.listdir(CMS_DIR):
+        <span class="kw">if</span> fname.endswith(<span class="str">".json"</span>):
+            <span class="kw">with</span> <span class="fn">open</span>(os.path.join(CMS_DIR, fname), <span class="str">"r"</span>) <span class="kw">as</span> f:
+                posts.append(json.load(f))
+    <span class="kw">return</span> json.dumps(<span class="fn">sorted</span>(posts, key=<span class="kw">lambda</span> x: x.get(<span class="str">"updated"</span>, <span class="str">""</span>), reverse=<span class="kw">True</span>))
+
+<span class="kw">@mcp.tool</span>()
+<span class="kw">def</span> <span class="fn">get_post</span>(slug: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="str">"""指定スラッグの記事を取得"""</span>
+    path = os.path.join(CMS_DIR, <span class="str">f"{slug}.json"</span>)
+    <span class="kw">if</span> <span class="kw">not</span> os.path.exists(path):
+        <span class="kw">return</span> json.dumps({<span class="str">"error"</span>: <span class="str">"not_found"</span>})
+    <span class="kw">with</span> <span class="fn">open</span>(path, <span class="str">"r"</span>) <span class="kw">as</span> f:
+        <span class="kw">return</span> json.dumps(json.load(f))
+
+<span class="kw">@mcp.tool</span>()
+<span class="kw">def</span> <span class="fn">create_post</span>(slug: <span class="cls">str</span>, title: <span class="cls">str</span>, content: <span class="cls">str</span>, tags: <span class="cls">list</span> = <span class="kw">None</span>) -> <span class="cls">str</span>:
+    <span class="str">"""新規記事を作成"""</span>
+    path = os.path.join(CMS_DIR, <span class="str">f"{slug}.json"</span>)
+    <span class="kw">if</span> os.path.exists(path):
+        <span class="kw">return</span> json.dumps({<span class="str">"error"</span>: <span class="str">"already_exists"</span>})
+    data = {
+        <span class="str">"slug"</span>: slug,
+        <span class="str">"title"</span>: title,
+        <span class="str">"content"</span>: content,
+        <span class="str">"tags"</span>: tags <span class="kw">or</span> [],
+        <span class="str">"created"</span>: datetime.now().isoformat(),
+        <span class="str">"updated"</span>: datetime.now().isoformat(),
+    }
+    <span class="kw">with</span> <span class="fn">open</span>(path, <span class="str">"w"</span>) <span class="kw">as</span> f:
+        json.dump(data, f, ensure_ascii=<span class="kw">False</span>)
+    <span class="kw">return</span> json.dumps({<span class="str">"status"</span>: <span class="str">"created"</span>, <span class="str">"slug"</span>: slug})
+
+<span class="kw">@mcp.tool</span>()
+<span class="kw">def</span> <span class="fn">update_post</span>(slug: <span class="cls">str</span>, title: <span class="cls">str</span> = <span class="kw">None</span>, content: <span class="cls">str</span> = <span class="kw">None</span>, tags: <span class="cls">list</span> = <span class="kw">None</span>) -> <span class="cls">str</span>:
+    <span class="str">"""記事を更新"""</span>
+    path = os.path.join(CMS_DIR, <span class="str">f"{slug}.json"</span>)
+    <span class="kw">if</span> <span class="kw">not</span> os.path.exists(path):
+        <span class="kw">return</span> json.dumps({<span class="str">"error"</span>: <span class="str">"not_found"</span>})
+    <span class="kw">with</span> <span class="fn">open</span>(path, <span class="str">"r"</span>) <span class="kw">as</span> f:
+        data = json.load(f)
+    <span class="kw">if</span> title:   data[<span class="str">"title"</span>] = title
+    <span class="kw">if</span> content: data[<span class="str">"content"</span>] = content
+    <span class="kw">if</span> tags:    data[<span class="str">"tags"</span>] = tags
+    data[<span class="str">"updated"</span>] = datetime.now().isoformat()
+    <span class="kw">with</span> <span class="fn">open</span>(path, <span class="str">"w"</span>) <span class="kw">as</span> f:
+        json.dump(data, f, ensure_ascii=<span class="kw">False</span>)
+    <span class="kw">return</span> json.dumps({<span class="str">"status"</span>: <span class="str">"updated"</span>, <span class="str">"slug"</span>: slug})
+
+<span class="kw">@mcp.tool</span>()
+<span class="kw">def</span> <span class="fn">delete_post</span>(slug: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="str">"""記事を削除"""</span>
+    path = os.path.join(CMS_DIR, <span class="str">f"{slug}.json"</span>)
+    <span class="kw">if</span> os.path.exists(path):
+        os.remove(path)
+        <span class="kw">return</span> json.dumps({<span class="str">"status"</span>: <span class="str">"deleted"</span>, <span class="str">"slug"</span>: slug})
+    <span class="kw">return</span> json.dumps({<span class="str">"error"</span>: <span class="str">"not_found"</span>})
+
+<span class="kw">@mcp.tool</span>()
+<span class="kw">def</span> <span class="fn">list_media</span>() -> <span class="cls">str</span>:
+    <span class="str">"""アップロード済みメディア一覧"""</span>
+    media_dir = os.path.join(CMS_DIR, <span class="str">"media"</span>)
+    os.makedirs(media_dir, exist_ok=<span class="kw">True</span>)
+    <span class="kw">return</span> json.dumps(os.listdir(media_dir))
+
+<span class="cmt"># FastAPI に MCP をマウント (Streamable HTTP)</span>
+mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>)
+
+<span class="kw">@app.get</span>(<span class="str">"/"</span>)
+<span class="kw">def</span> <span class="fn">root</span>():
+    <span class="kw">return</span> {<span class="str">"message"</span>: <span class="str">"Colab CMS MCP Server is running"</span>}</code></pre>
+
+  <h3>2.3 実装のポイント</h3>
+  <table>
+    <thead>
+      <tr><th>項目</th><th>内容</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>永続化</strong></td><td>Colab のセッションは一時的なので、記事データは Google Drive に JSON 形式で保存</td></tr>
+      <tr><td><strong>ランスポート</strong></td><td><code>mount_mcp</code> で Streamable HTTP（POST/GET + SSE）を有効化。PWA から直接 MCP プロトコルで通信可能</td></tr>
+      <tr><td><strong>公開</strong></td><td><code>pyngrok</code> で <code>localhost:8000</code> をインターネット公開。PWA はこの HTTPS URL に接続</td></tr>
+      <tr><td><strong>認証</strong></td><td>必要に応じて <code>Authorization</code> ヘッダーを検証する Depends を <code>/mcp</code> やツール内に追加</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <span class="section-num">3</span>
+  <h2>公開: Colab サーバーをインターネットに出す</h2>
+
+  <h3>3.1 ngrok での公開（最も簡単）</h3>
+  <p>2023年以降、ngrok の無料アカウントにも <strong>1つの static dev domain</strong>（例: <code>xxx.ngrok-free.dev</code>）が割り当てられます。セッションを再起動しても URL が変わらないため、PWA 側のエンドポイントを固定できます。</p>
+
+<pre><code><span class="kw">from</span> pyngrok <span class="kw">import</span> ngrok
+
+<span class="cmt"># 自分の static domain を指定（ダッシュボードで確認可能）</span>
+public_url = ngrok.connect(
+    addr=<span class="str">"8000"</span>,
+    proto=<span class="str">"http"</span>,
+    domain=<span class="str">"your-domain.ngrok-free.dev"</span>  <span class="cmt"># 無料で割り当てられたドメイン</span>
+)
+<span class="fn">print</span>(public_url)  <span class="cmt"># https://your-domain.ngrok-free.app/mcp で常にアクセス可能</span></code></pre>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">ngrok 無料版の制約</div>
+    データ転送は約 1GB/月、リクエスト数は約 2万/月、HTTP/S エンドポイントにインタースティシャル広告ページが入ることがあります。
+  </div>
+
+  <h3>3.2 Cloudflare Tunnel（cloudflared）での公開</h3>
+  <p>ngrok よりも安定しており、挿入告ページがありません。Colab 上で <code>cloudflared</code> を使う方法が広く使われています。</p>
+
+<pre><code><span class="cmt"># cloudflared のダウンロードとインストール</span>
+!wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
+!chmod +x cloudflared
+
+<span class="cmt"># FastAPI サーバーをバックグラウンドで起動</span>
+!nohup uvicorn server:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
+
+<span class="cmt"># Cloudflare Tunnel で公開（ランダム一時URL）</span>
+!./cloudflared tunnel --url http://localhost:8000</code></pre>
+
+  <p>出力された <code>https://abc123.trycloudflare.com/mcp</code> を PWA 側の <code>MCP_URL</code> に設定します。</p>
+
+  <h3>3.3 公開手法の比較</h3>
+  <table>
+    <thead>
+      <tr><th>比較項目</th><th>ngrok</th><th>Cloudflare Tunnel</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>無料固定ドメイン</td><td>1つ（<code>*.ngrok-free.dev</code>）</td><td>カスタムドメイン紐付け可能</td></tr>
+      <tr><td>挿入広告ページ</td><td>あり（無料版）</td><td>なし</td></tr>
+      <tr><td>セットアップ難易度</td><td>簡単（pyngrok 1行）</td><td>やや手順が多い</td></tr>
+      <tr><td>速度・安定性</td><td>良好</td><td>非常に良好</td></tr>
+      <tr><td>Colab 相性</td><td>良好</td><td>良好</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <span class="section-num">4</span>
+  <h2>フロントエンド: PWA からの接続</h2>
+
+  <h3>4.1 SDK のインストール</h3>
+  <p>PWA 側は公式の TypeScript SDK（<code>@modelcontextprotocol/sdk</code>）を使い、<code>StreamableHTTPClientTransport</code> で接続します。</p>
+
+<pre><code>npm install @modelcontextprotocol/sdk</code></pre>
+
+  <h3>4.2 MCP クライアンの実装</h3>
+
+<pre><code><span class="cmt">// mcp-client.ts</span>
+<span class="kw">import</span> { Client, StreamableHTTPClientTransport } <span class="kw">from</span> <span class="str">"@modelcontextprotocol/sdk"</span>;
+
+<span class="kw">const</span> MCP_URL = <span class="str">"https://xxxx.ngrok-free.app/mcp"</span>; <span class="cmt">// Colab で発行された URL</span>
+
+<span class="kw">let</span> client: Client | <span class="kw">null</span> = <span class="kw">null</span>;
+
+<span class="kw">export async function</span> <span class="fn">connectMCP</span>() {
+  <span class="kw">const</span> transport = <span class="kw">new</span> StreamableHTTPClientTransport(<span class="kw">new</span> URL(MCP_URL));
+
+  client = <span class="kw">new</span> Client({ name: <span class="str">"pwa-cms-client"</span>, version: <span class="str">"1.0.0"</span> });
+  <span class="kw">await</span> client.connect(transport);
+
+  <span class="cmt">// ツール一覧を取得（CMS 機能の発見）</span>
+  <span class="kw">const</span> tools = <span class="kw">await</span> client.listTools();
+  console.log(<span class="str">"Available tools:"</span>, tools);
+  <span class="kw">return</span> client;
+}
+
+<span class="cmt">// CMS 操作ラッパー</span>
+<span class="kw">export async function</span> <span class="fn">listPosts</span>() {
+  <span class="kw">if</span> (!client) <span class="kw">throw new</span> Error(<span class="str">"Not connected"</span>);
+  <span class="kw">const</span> result = <span class="kw">await</span> client.callTool(<span class="str">"list_posts"</span>, {});
+  <span class="kw">return</span> JSON.parse(result.content[<span class="num">0</span>].text);
+}
+
+<span class="kw">export async function</span> <span class="fn">getPost</span>(slug: <span class="cls">string</span>) {
+  <span class="kw">if</span> (!client) <span class="kw">throw new</span> Error(<span class="str">"Not connected"</span>);
+  <span class="kw">const</span> result = <span class="kw">await</span> client.callTool(<span class="str">"get_post"</span>, { slug });
+  <span class="kw">return</span> JSON.parse(result.content[<span class="num">0</span>].text);
+}
+
+<span class="kw">export async function</span> <span class="fn">createPost</span>(
+  slug: <span class="cls">string</span>, title: <span class="cls">string</span>, content: <span class="cls">string</span>, tags?: <span class="cls">string</span>[]
+) {
+  <span class="kw">if</span> (!client) <span class="kw">throw new</span> Error(<span class="str">"Not connected"</span>);
+  <span class="kw">const</span> result = <span class="kw">await</span> client.callTool(<span class="str">"create_post"</span>, { slug, title, content, tags });
+  <span class="kw">return</span> JSON.parse(result.content[<span class="num">0</span>].text);
+}
+
+<span class="kw">export async function</span> <span class="fn">updatePost</span>(
+  slug: <span class="cls">string</span>,
+  updates: { title?: <span class="cls">string</span>; content?: <span class="cls">string</span>; tags?: <span class="cls">string</span>[] }
+) {
+  <span class="kw">if</span> (!client) <span class="kw">throw new</span> Error(<span class="str">"Not connected"</span>);
+  <span class="kw">const</span> result = <span class="kw">await</span> client.callTool(<span class="str">"update_post"</span>, { slug, ...updates });
+  <span class="kw">return</span> JSON.parse(result.content[<span class="num">0</span>].text);
+}
+
+<span class="kw">export async function</span> <span class="fn">deletePost</span>(slug: <span class="cls">string</span>) {
+  <span class="kw">if</span> (!client) <span class="kw">throw new</span> Error(<span class="str">"Not connected"</span>);
+  <span class="kw">const</span> result = <span class="kw">await</span> client.callTool(<span class="str">"delete_post"</span>, { slug });
+  <span class="kw">return</span> JSON.parse(result.content[<span class="num">0</span>].text);
+}</code></pre>
+
+  <h3>4.3 PWA の構成例（React）</h3>
+
+<pre><code><span class="cmt">// App.tsx</span>
+<span class="kw">import</span> { useEffect, useState } <span class="kw">from</span> <span class="str">"react"</span>;
+<span class="kw">import</span> { connectMCP, listPosts, createPost } <span class="kw">from</span> <span class="str">"./mcp-client"</span>;
+
+<span class="kw">export default function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [posts, setPosts] = useState&lt;<span class="cls">any</span>[]&gt;([]);
+  <span class="kw">const</span> [connected, setConnected] = useState(<span class="kw">false</span>);
+
+  useEffect(() => {
+    connectMCP().then(() => {
+      setConnected(<span class="kw">true</span>);
+      refresh();
+    });
+  }, []);
+
+  <span class="kw">async function</span> <span class="fn">refresh</span>() {
+    <span class="kw">const</span> data = <span class="kw">await</span> listPosts();
+    setPosts(data);
+  }
+
+  <span class="kw">return</span> (
+    &lt;div className=<span class="str">"p-4"</span>&gt;
+      &lt;h1&gt;Colab CMS PWA&lt;/h1&gt;
+      &lt;p&gt;Status: {connected ? <span class="str">"Connected"</span> : <span class="str">"Connecting..."</span>}&lt;/p&gt;
+      &lt;button onClick={refresh}&gt;Refresh&lt;/button&gt;
+      &lt;ul&gt;
+        {posts.map((p) => (
+          &lt;li key={p.slug}&gt;{p.title}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+
+  <h3>4.4 PWA 化のポイント</h3>
+  <ul>
+    <li><strong>manifest.json</strong>: アプリ名、アイコン、テーマカラーを設定</li>
+    <li><strong>Service Worker</strong>: 記事のキャッシュ、オフライン閲覧を実現（IndexedDB や Cache API を併用）</li>
+    <li><strong>HTTPS 必須</strong>: ngrok / Cloudflare Tunnel は自動的に HTTPS を提供するめ、PWA 要件を満たします</li>
+  </ul>
+</section>
+
+<section>
+  <span class="section-num">5</span>
+  <h2>セキュリティ: 公開時の必須対策</h2>
+
+  <h3>5.1 Bearer Token 認証</h3>
+  <p>公開 URL は全世界に晒されるため、<code>/mcp</code> エンドポイントに Bearer Token 認証を適用します。</p>
+
+<pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> Depends, HTTPException, Header
+
+API_TOKEN = os.environ.get(<span class="str">"MCP_AUTH_TOKEN"</span>, <span class="str">"change-me-in-production"</span>)
+
+<span class="kw">def</span> <span class="fn">verify_token</span>(authorization: <span class="cls">str</span> = Header(<span class="kw">None</span>)):
+    <span class="kw">if</span> <span class="kw">not</span> authorization <span class="kw">or</span> <span class="kw">not</span> authorization.startswith(<span class="str">"Bearer "</span>):
+        <span class="kw">raise</span> HTTPException(status_code=<span class="num">401</span>, detail=<span class="str">"Missing or invalid token"</span>)
+    token = authorization.replace(<span class="str">"Bearer "</span>, <span class="str">""</span>)
+    <span class="kw">if</span> token != API_TOKEN:
+        <span class="kw">raise</span> HTTPException(status_code=<span class="num">403</span>, detail=<span class="str">"Invalid token"</span>)
+    <span class="kw">return</span> token
+
+<span class="cmt"># MCP エンドポイントに認証を適用</span>
+mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>, dependencies=[Depends(verify_token)])</code></pre>
+
+  <p>PWA 側では、トランスポートの初期化時にヘッダーを渡します。</p>
+
+<pre><code><span class="kw">const</span> transport = <span class="kw">new</span> StreamableHTTPClientTransport(
+  <span class="kw">new</span> URL(MCP_URL),
+  { headers: { Authorization: <span class="str">`Bearer ${API_TOKEN}`</span> } }
+);</code></pre>
+
+  <h3>5.2 CORS の厳格化</h3>
+  <p>本番環境では <code>allow_origins=["*"]</code> を避け、PWA のドメインのみを許可します。</p>
+
+<pre><code>app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[<span class="str">"https://your-pwa-domain.vercel.app"</span>],
+    allow_credentials=<span class="kw">True</span>,
+    allow_methods=[<span class="str">"POST"</span>, <span class="str">"GET"</span>, <span class="str">"OPTIONS"</span>],
+    allow_headers=[<span class="str">"Authorization"</span>, <span class="str">"Content-Type"</span>, <span class="str">"mcp-session-id"</span>],
+)</code></pre>
+</section>
+
+<section>
+  <span class="section-num">6</span>
+  <h2>運用の注意点と本番移行</h2>
+
+  <h3>6.1 Colab 特有の制約</h3>
+  <table>
+    <thead>
+      <tr><th>リスク</th><th>対策</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>セッション切断</strong></td><td>無料版はアイドル 90分・最大 12時間で切断。ブラウザ keep-alive スクリプトや Colab Pro のバックグラウンド実行で緩和</td></tr>
+      <tr><td><strong>ngrok URL の変動</strong></td><td>無料版でも固定ドメイン 1つが利用可能。固定が必須なら有料版または Cloudflare Tunnel のカスタムドメインを検討</td></tr>
+      <tr><td><strong>データ転送上限</strong></td><td>ngrok 無料版は 1GB/月。CMS 利用なら十分だが、メディア配信には不向き</td></tr>
+      <tr><td><strong>認証・認可</strong></td><td>公開 URL になった時点で誰でもアクセス可能。Bearer Token または MCP の OAuth 2.1 拡張を必ず実装</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">重要</div>
+    「常時運用の本番サーバー」として Colab を使うのは推奨されません。プロトイプ・個人利用・短時間デモ向けです。本格的な CMS 公開には、以下の永続ホスティングサービスへの移行を検討してください。
+  </div>
+
+  <h3>6.2 本番移行先</h3>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">HF</span> Hugging Face Spaces</div>
+    <p style="font-size:var(--step--1)">MCP Server としての Spaces デプロイを公式にサポート。Streamable HTTP 対応の MCP Server を無料でホスト可能。<code>requirements.txt</code> + <code>app.py</code> で即デプロイ。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">Rd</span> Render</div>
+    <p style="font-size:var(--step--1)">Web Service として Docker または Native Python 環境で動作。自動 HTTPS、環境変数管理が組み込み。セッション切断なしで常時運用可能。</p>
+  </div>
+
+  <h3>6.3 公開手法の選択まとめ</h3>
+  <table>
+    <thead>
+      <tr><th>用途</th><th>推奨手法</th><th>理由</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="tag tag-amber">数時間のデモ・検証</span></td><td>ngrok（固定ドメイン）</td><td>1行で公開、PWA の URL を固定できる</td></tr>
+      <tr><td><span class="tag tag-blue">広告なし・安定接続</span></td><td>Cloudflare Tunnel</td><td>無料で挿入ページなし、速度良好</td></tr>
+      <tr><td><span class="tag tag-green">個人 CMS（非商用）</span></td><td>Colab + Tunnel + Drive</td><td>無料 GPU/CPU + 無料ストレージ</td></tr>
+      <tr><td><span class="tag tag-red">本番・常時運用</span></td><td>Hugging Face Spaces / Render</td><td>セッション切断なし、常時 SSL、カスタムドメイン対応</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <span class="section-num">7</span>
+  <h2>まとめ</h2>
+  <p>Colab MCP Server を Web サーバーとして公開し、PWA クライアントから CMS を構成するには、<strong>「FastAPI + FastMCP（Streamable HTTP）+ ngrok / Cloudflare Tunnel」</strong>という構成が最も現実的です。</p>
+
+  <ul>
+    <li><strong>バックエンド</strong>: Colab 上で FastAPI を起動し、<code>fastmcp</code> のツールとして CMS 機能（記事 CRUD、メディア管理）を実装。Google Drive でータを永続化します。</li>
+    <li><strong>通信</strong>: <code>mount_mcp</code> により <code>/mcp</code> エンドポイントが Streamable HTTP 対応になり、PWA から直接 MCP プロトコルで呼び出せます。</li>
+    <li><strong>フロントエンド</strong>: PWA 側は <code>@modelcontextprotocol/sdk</code> の <code>StreamableHTTPClientTransport</code> を使用して接続し、ツール一覧の自動発見と実行を行います。</li>
+  </ul>
+
+  <p>この手法により、AI エージェント向けプロトコルである MCP を「Web アプリとサーバーの通信規約」として転用し、軽量なヘッドレス CMS を Colab の無料環境上に構築できます。ただし、Colab のセッション寿命という制約を理解したうえで、本番運用には Hugging Face Spaces や Render への移行を視野に入れることが重要です。</p>
+</section>
+
+</main>
+
+<footer>
+  <p>Colab MCP Server × PWA CMS 構成ガイド</p>
+  <p style="margin-top:0.3em;opacity:0.6;">ブラウザで開き、印刷 → PDF に保存することで紙面/PDF 版としても利用できます。</p>
+</footer>
+
+<a href="../index.html" aria-label="アーカイブに戻る" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-block;padding:8px 14px;background:#f5f0e8;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #111;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;text-decoration:none;line-height:1;">&larr; Archives</a>
+</body>
+</html>

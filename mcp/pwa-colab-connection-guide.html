@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWA から Google Colab への接続ガイド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0b0f19;
+  --bg-surface: #111827;
+  --bg-elevated: #1f2937;
+  --bg-code: #0d1117;
+  --ink: #f3f4f6;
+  --ink-secondary: #9ca3af;
+  --ink-muted: #6b7280;
+  --accent: #f59e0b;
+  --accent-weak: color-mix(in oklab, var(--accent) 12%, var(--bg-surface));
+  --accent-glow: color-mix(in oklab, var(--accent) 25%, transparent);
+  --line: color-mix(in oklab, var(--ink) 10%, transparent);
+  --line-subtle: color-mix(in oklab, var(--ink) 5%, transparent);
+  --success: #10b981;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --step-0: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+  --step-1: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --step-2: clamp(1.375rem, 1.2rem + 0.9vw, 2rem);
+  --step-3: clamp(1.75rem, 1.4rem + 1.8vw, 3.25rem);
+  --space: clamp(1rem, 0.75rem + 1.2vw, 2rem);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 32px -8px rgba(0,0,0,0.5);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.85;
+  color: var(--ink);
+  background: var(--bg-deep);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== HEADER / HERO ========== */
+header {
+  position: relative;
+  padding: calc(var(--space) * 4) var(--space) calc(var(--space) * 3);
+  text-align: center;
+  overflow: hidden;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, var(--accent-glow), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 20%, color-mix(in oklab, var(--info) 15%, transparent), transparent 60%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-weak);
+  margin-bottom: calc(var(--space) * 1.2);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-badge .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+header h1 {
+  font-size: var(--step-3);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 1;
+  max-width: 18ch;
+  margin: 0 auto calc(var(--space) * 0.8);
+}
+
+header h1 .accent-word {
+  color: var(--accent);
+  text-shadow: 0 0 40px var(--accent-glow);
+}
+
+header .lead {
+  font-size: var(--step-1);
+  color: var(--ink-secondary);
+  max-width: 52ch;
+  margin: 0 auto calc(var(--space) * 1.5);
+  position: relative;
+  z-index: 1;
+  line-height: 1.7;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+}
+
+.hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ========== MAIN LAYOUT ========== */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--space) calc(var(--space) * 4);
+}
+
+section {
+  margin-bottom: calc(var(--space) * 2.5);
+}
+
+/* ========== SECTION HEADERS ========== */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: calc(var(--space) * 0.9);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+h2 {
+  font-size: var(--step-2);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: var(--step-1);
+  font-weight: 600;
+  margin: calc(var(--space) * 1.2) 0 calc(var(--space) * 0.5);
+  color: var(--ink);
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: calc(var(--space) * 0.8) 0 calc(var(--space) * 0.4);
+  color: var(--accent);
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--ink-secondary);
+}
+
+/* ========== ARCHITECTURE DIAGRAM ========== */
+.arch-diagram {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 1.2);
+  margin: calc(var(--space) * 1) 0 calc(var(--space) * 1.2);
+  text-align: center;
+}
+
+.arch-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.arch-box {
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.arch-box.pwa {
+  background: color-mix(in oklab, var(--info) 18%, var(--bg-elevated));
+  color: var(--info);
+  border: 1px solid color-mix(in oklab, var(--info) 30%, transparent);
+}
+
+.arch-box.arrow {
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.1rem;
+  padding: 0;
+}
+
+.arch-box.colab {
+  background: color-mix(in oklab, var(--warning) 18%, var(--bg-elevated));
+  color: var(--warning);
+  border: 1px solid color-mix(in oklab, var(--warning) 30%, transparent);
+}
+
+.arch-box.gpu {
+  background: color-mix(in oklab, var(--success) 18%, var(--bg-elevated));
+  color: var(--success);
+  border: 1px solid color-mix(in oklab, var(--success) 30%, transparent);
+}
+
+.arch-label {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  margin-top: 0.35rem;
+}
+
+/* ========== CARDS ========== */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 1);
+  margin-bottom: calc(var(--space) * 0.8);
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.card-icon.rest { background: color-mix(in oklab, var(--info) 15%, var(--bg-elevated)); }
+.card-icon.ws { background: color-mix(in oklab, var(--success) 15%, var(--bg-elevated)); }
+.card-icon.mcp { background: color-mix(in oklab, var(--accent) 15%, var(--bg-elevated)); }
+
+.card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.card-badge {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-badge.recommended {
+  background: color-mix(in oklab, var(--success) 20%, var(--bg-elevated));
+  color: var(--success);
+}
+
+.card-badge.simple {
+  background: color-mix(in oklab, var(--info) 20%, var(--bg-elevated));
+  color: var(--info);
+}
+
+.card-badge.advanced {
+  background: color-mix(in oklab, var(--accent) 20%, var(--bg-elevated));
+  color: var(--accent);
+}
+
+/* ========== CODE BLOCKS ========== */
+pre {
+  background: var(--bg-code);
+  border: 1px solid var(--line-subtle);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", "Noto Sans JP", monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  margin: 0.75rem 0 1.25rem;
+}
+
+code {
+  font-family: "JetBrains Mono", "Noto Sans JP", monospace;
+  font-size: 0.85em;
+}
+
+pre code {
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+:not(pre) > code {
+  background: var(--bg-elevated);
+  padding: 0.15rem 0.4rem;
+  border-radius: 5px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.code-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  margin-bottom: 0.35rem;
+}
+
+/* ========== TABLES ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--bg-elevated);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+td {
+  color: var(--ink-secondary);
+}
+
+tr:hover td {
+  background: color-mix(in oklab, var(--accent) 3%, transparent);
+}
+
+/* ========== LISTS ========== */
+ul, ol {
+  margin: 0.75rem 0 1rem 1.5rem;
+  color: var(--ink-secondary);
+}
+
+li {
+  margin-bottom: 0.4rem;
+}
+
+li::marker {
+  color: var(--accent);
+}
+
+/* ========== CALLOUTS ========== */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-weak);
+  padding: 1rem 1.2rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 1rem 0 1.25rem;
+}
+
+.callout-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.callout p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.callout.info {
+  border-left-color: var(--info);
+  background: color-mix(in oklab, var(--info) 8%, var(--bg-surface));
+}
+
+.callout.info .callout-title { color: var(--info); }
+
+.callout.success {
+  border-left-color: var(--success);
+  background: color-mix(in oklab, var(--success) 8%, var(--bg-surface));
+}
+
+.callout.success .callout-title { color: var(--success); }
+
+/* ========== COMPARISON TABLE WRAPPER ========== */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin: 1rem 0 1.5rem;
+}
+
+.table-wrap table {
+  margin: 0;
+}
+
+.table-wrap th:first-child,
+.table-wrap td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--bg-elevated);
+  z-index: 1;
+  min-width: 140px;
+}
+
+/* ========== TAGS ========== */
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-right: 0.3rem;
+}
+
+.tag-low { background: color-mix(in oklab, var(--success) 15%, var(--bg-elevated)); color: var(--success); }
+.tag-mid { background: color-mix(in oklab, var(--accent) 15%, var(--bg-elevated)); color: var(--accent); }
+.tag-rest { background: color-mix(in oklab, var(--info) 15%, var(--bg-elevated)); color: var(--info); }
+.tag-ws { background: color-mix(in oklab, var(--success) 15%, var(--bg-elevated)); color: var(--success); }
+
+/* ========== SOURCE CHIPS ========== */
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  text-decoration: none;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  margin-left: 0.3rem;
+  transition: all 0.2s;
+}
+
+.source-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ========== FOOTER ========== */
+footer {
+  text-align: center;
+  padding: calc(var(--space) * 2) var(--space);
+  border-top: 1px solid var(--line);
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 8px; height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-muted);
+}
+
+/* ========== PRINT ========== */
+@media print {
+  body { background: #fff; color: #111; }
+  :root {
+    --bg-deep: #fff;
+    --bg-surface: #f5f5f5;
+    --bg-elevated: #eaeaea;
+    --ink: #111;
+    --ink-secondary: #333;
+    --line: #ccc;
+  }
+  header::before, .hero-badge .dot { display: none; }
+  pre { background: #f5f5f5; border-color: #ddd; }
+}
+
+@page {
+  size: A4;
+  margin: 18mm;
+}
+
+/* ========== REDUCED MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-badge .dot { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hero-badge"><span class="dot"></span> Technical Guide</div>
+  <h1>PWA から <span class="accent-word">Google Colab</span> への接続ガイド</h1>
+  <p class="lead">
+    Progressive Web App から Google Colab の GPU / TPU 計算資源を活用するための接続方法を、実装コードとともに体系的に解説します。
+  </p>
+  <div class="hero-meta">
+    <span>2026年9月版</span>
+    <span>FastAPI / WebSocket / MCP</span>
+    <span>ngrok トンネリング</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ========== SECTION 0: OVERVIEW ========== -->
+<section>
+  <div class="section-header">
+    <span class="section-num">00</span>
+    <h2>全体構成と前提</h2>
+  </div>
+  <p>
+    PWA から Google Colab に接続する際の基本的なアーキテクチャは、Colab ランタイム上に Web サーバーを立ち上げ、トンネリングサービスで公開 URL を取得し、PWA からそのエンドポイントにアクセスする形になります。
+  </p>
+
+  <div class="arch-diagram">
+    <div class="arch-row">
+      <div>
+        <div class="arch-box pwa">PWA (フロントエンド)</div>
+        <div class="arch-label">ブラウザ / スマホアプリ</div>
+      </div>
+      <div class="arch-box arrow">← HTTP / WS →</div>
+      <div>
+        <div class="arch-box colab">Google Colab</div>
+        <div class="arch-label">FastAPI / Flask / MCP Server</div>
+      </div>
+      <div class="arch-box arrow">→</div>
+      <div>
+        <div class="arch-box gpu">GPU / TPU</div>
+        <div class="arch-label">計算実行</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-title">前提条件</div>
+    <p>Colab ランタイムはセッション継続中のみ有効です。一定時間アイドル状態が続くと切断されるため、keep-alive 対策が必要です。また、無料プランの ngrok では動的 URL が発行されるため、PWA 側で URL を更新できる仕組みを検討してください。</p>
+  </div>
+</section>
+
+<!-- ========== SECTION 1: REST API ========== -->
+<section>
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>FastAPI + ngrok による REST API 公開</h2>
+  </div>
+  <p>
+    最も一般的かつ実装がシンプルな方法です。Colab 上で FastAPI サーバーを起動し、<code>pyngrok</code> でインターネットに公開します。PWA からは通常の HTTP リクエストで GPU 推論などを実行できます。
+  </p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon rest">API</div>
+      <div class="card-title">Colab 側: FastAPI サーバー</div>
+      <div class="card-badge recommended">推奨</div>
+    </div>
+    <div class="code-label">Python (Colab Notebook)</div>
+<pre><code># パッケージインストール
+!pip install fastapi uvicorn pyngrok nest-asyncio
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import nest_asyncio
+import uvicorn
+from pyngrok import ngrok
+
+# ngrok 認証トークン設定
+ngrok.set_auth_token("YOUR_NGROK_AUTH_TOKEN")
+
+app = FastAPI()
+
+# CORS を許可（PWA からのブラウザアクセスに必須）
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/predict")
+def predict(text: str):
+    """GPU を使った推論処理の例"""
+    # ここに実際の推論コードを記述
+    return {"result": f"Processed: {text}"}
+
+# 公開 URL の取得
+public_url = ngrok.connect(8000)
+print(f"Public URL: {public_url}")
+
+# サーバー起動
+nest_asyncio.apply()
+uvicorn.run(app, host="0.0.0.0", port=8000)</code></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon rest">JS</div>
+      <div class="card-title">PWA 側: クライアント呼び出し</div>
+    </div>
+    <div class="code-label">JavaScript</div>
+<pre><code>const COLAB_API_URL = "https://xxxx.ngrok-free.app";  // ngrok URL
+
+async function callColab(text) {
+  const response = await fetch(
+    `${COLAB_API_URL}/predict?text=${encodeURIComponent(text)}`
+  );
+  const data = await response.json();
+  return data.result;
+}</code></pre>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">ポイント</div>
+    <p><code>CORSMiddleware</code> の設定がないと、PWA からのブラウザリクエストがブロックされます。ngrok の無料プランではセッションごとに URL が変わるため、PWA 側で動的に URL を更新する仕組みが必要です。</p>
+  </div>
+</section>
+
+<!-- ========== SECTION 2: WEBSOCKET ========== -->
+<section>
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>WebSocket による双方向リアルタイム通信</h2>
+  </div>
+  <p>
+    推論の進捗状況を PWA にリアルタイムで表示したい場合や、ストリーミングレスポンスが必要な場合は WebSocket が有効です。Colab 上に WebSocket サーバーを立ち上げ、ngrok で公開します。
+  </p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ws">WS</div>
+      <div class="card-title">Colab 側: WebSocket サーバー</div>
+    </div>
+    <div class="code-label">Python (Colab Notebook)</div>
+<pre><code>!pip install websockets pyngrok nest-asyncio
+
+import asyncio
+import websockets
+from pyngrok import ngrok
+import nest_asyncio
+
+ngrok.set_auth_token("YOUR_NGROK_AUTH_TOKEN")
+
+async def handler(websocket, path):
+    async for message in websocket:
+        # GPU 推論などの処理
+        result = f"Result for: {message}"
+        await websocket.send(result)
+
+# WebSocket サーバー起動
+start_server = websockets.serve(handler, "0.0.0.0", 8765)
+
+# ngrok で WebSocket ポートを公開
+public_url = ngrok.connect(8765, "http")
+print(f"WebSocket URL: {public_url}")
+
+nest_asyncio.apply()
+asyncio.get_event_loop().run_until_complete(start_server)</code></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon ws">JS</div>
+      <div class="card-title">PWA 側: WebSocket クライアント</div>
+    </div>
+    <div class="code-label">JavaScript</div>
+<pre><code>const ws = new WebSocket("wss://xxxx.ngrok-free.app");
+
+ws.onopen = () => {
+  console.log("Connected to Colab WebSocket");
+  ws.send("Hello from PWA");
+};
+
+ws.onmessage = (event) => {
+  console.log("Received from Colab:", event.data);
+  // 進捗表示や結果レンダリング
+};
+
+ws.onerror = (error) => console.error("WebSocket error:", error);</code></pre>
+  </div>
+
+  <p>
+    Colab 上で WebSocket プロキシを構築するより高度な手法として、<code>google.colab.kernel.comms</code> を利用した JavaScript 連携も存在します。
+    <a class="source-chip" href="https://gist.github.com/oeway/74632b5fd3fbb66e5dc2d54d065a8495" target="_blank">GitHub Gist: colab_websocket_proxy.py</a>
+  </p>
+</section>
+
+<!-- ========== SECTION 3: MCP SERVER ========== -->
+<section>
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Colab MCP Server を Web サーバーとして公開</h2>
+  </div>
+  <p>
+    2026年3月に Google から公開された <strong>Colab MCP Server</strong> は、AI エージェントが Colab ノートブックをプログラム的に操作するための仕組みです。デフォルトでは <code>stdio</code> トランスポートを使用しますが、HTTP / SSE / Streamable HTTP トランスポートに切り替えることで、PWA などの Web クライアントから直接アクセス可能な Web サーバーとして機能させることができます。
+    <a class="source-chip" href="https://developers.googleblog.com/en/announcing-the-colab-mcp-server-connect-any-ai-agent-to-google-colab/" target="_blank">Google Developers Blog</a>
+    <a class="source-chip" href="https://github.com/googlecolab/colab-mcp" target="_blank">GitHub: googlecolab/colab-mcp</a>
+  </p>
+
+  <h3>方法 A: MCP + SSE over ngrok</h3>
+  <p>
+    MCP Python SDK の <code>SseServerTransport</code> を FastAPI 上で動作させ、SSE エンドポイントを公開します。MCP プロトコルに準拠したツール呼び出しが可能です。
+  </p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon mcp">MCP</div>
+      <div class="card-title">Colab 側: MCP over SSE サーバー</div>
+      <div class="card-badge advanced">上級</div>
+    </div>
+    <div class="code-label">Python (Colab Notebook)</div>
+<pre><code>!pip install mcp fastapi uvicorn pyngrok nest-asyncio
+
+import nest_asyncio
+import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pyngrok import ngrok
+from mcp.server.fastmcp import FastMCP
+from mcp.server.sse import SseServerTransport
+from starlette.requests import Request
+
+ngrok.set_auth_token("YOUR_NGROK_AUTH_TOKEN")
+
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# MCP サーバー作成
+mcp = FastMCP("colab-server")
+
+@mcp.tool()
+async def execute_python(code: str) -> str:
+    """Colab 上で Python コードを実行"""
+    from IPython import get_ipython
+    import io, sys
+    old_stdout = sys.stdout
+    sys.stdout = io.StringIO()
+    try:
+        shell = get_ipython()
+        result = shell.run_cell(code)
+        output = sys.stdout.getvalue()
+        return output or "Executed successfully"
+    finally:
+        sys.stdout = old_stdout
+
+@mcp.tool()
+async def get_gpu_info() -> str:
+    """GPU 情報を取得"""
+    import subprocess
+    try:
+        r = subprocess.run(["nvidia-smi"], capture_output=True, text=True)
+        return r.stdout
+    except Exception as e:
+        return str(e)
+
+# SSE トランポート
+sse = SseServerTransport("/message")
+
+@app.get("/sse")
+async def sse_endpoint(request: Request):
+    async with sse.connect_sse(
+        request.scope, request.receive, request._send
+    ) as (read_stream, write_stream):
+        await mcp._mcp_server.run(
+            read_stream, write_stream,
+            mcp._mcp_server.create_initialization_options(),
+        )
+
+@app.post("/message")
+async def message_endpoint(request: Request):
+    return await sse.post_message(
+        request.scope, request.receive, request._send
+    )
+
+public_url = ngrok.connect(8000)
+print(f"MCP SSE Endpoint: {public_url}/sse")
+
+nest_asyncio.apply()
+uvicorn.run(app, host="0.0.0.0", port=8000)</code></pre>
+  </div>
+
+  <h3>方法 B: fastapi-mcp による自動公開</h3>
+  <p>
+    既存の FastAPI エンドポイントを MCP ツールとして自動的に公開する <code>fastapi-mcp</code> を利用すると、実装コストを大幅に削減できます。
+    <a class="source-chip" href="https://github.com/tadata-org/fastapi_mcp" target="_blank">GitHub: fastapi_mcp</a>
+  </p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon mcp">FM</div>
+      <div class="card-title">fastapi-mcp による自動 MCP 化</div>
+      <div class="card-badge simple">簡易</div>
+    </div>
+    <div class="code-label">Python (Colab Notebook)</div>
+<pre><code>!pip install fastapi uvicorn pyngrok fastapi-mcp nest-asyncio
+
+from fastapi import FastAPI
+from fastapi_mcp import FastApiMCP
+from pyngrok import ngrok
+import nest_asyncio, uvicorn
+
+ngrok.set_auth_token("YOUR_NGROK_AUTH_TOKEN")
+
+app = FastAPI()
+
+@app.get("/predict/{text}")
+def predict(text: str):
+    return {"result": f"processed: {text}"}
+
+@app.post("/train")
+def train(data: dict):
+    return {"status": "training started"}
+
+# FastAPI エンドポイントを MCP ツールとして公開
+mcp = FastApiMCP(app, name="colab-api-server")
+mcp.mount()  # /mcp エンドポイントにマウント
+
+public_url = ngrok.connect(8000)
+print(f"API & MCP: {public_url}")
+
+nest_asyncio.apply()
+uvicorn.run(app, host="0.0.0.0", port=8000)</code></pre>
+  </div>
+
+  <h3>方法 C: REST API シンプル公開（MCP 不要）</h3>
+  <p>
+    MCP プロトコルを使わず、純粋に REST API として Colab の計算資源を公開したい場合は<code>colab-code-executor</code> などのラッパーを利用するのが最も手軽です。
+    <a class="source-chip" href="https://pypi.org/project/colab-code-executor/" target="_blank">PyPI: colab-code-executor</a>
+  </p>
+</section>
+
+<!-- ========== SECTION 4: COMPARISON ========== -->
+<section>
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>方法比較</h2>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>方法</th>
+          <th>トランスポート</th>
+          <th>難易度</th>
+          <th>最適な用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-rest">REST</span> FastAPI + ngrok</td>
+          <td>HTTP</td>
+          <td><span class="tag tag-low">低</span></td>
+          <td>シンプルな GPU 推論 API</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-ws">WS</span> WebSocket + ngrok</td>
+          <td>WebSocket</td>
+          <td><span class="tag tag-mid">中</span></td>
+          <td>リアルタイム進捗表示・ストリーミング</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-mid">MCP</span> MCP + SSE</td>
+          <td>SSE / Streamable HTTP</td>
+          <td><span class="tag tag-mid">中</span></td>
+          <td>AI エージェント連携・ツール呼び出し</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-rest">MCP</span> fastapi-mcp</td>
+          <td>HTTP / SSE</td>
+          <td><span class="tag tag-low">低</span></td>
+          <td>既存 API の MCP プロトコル化</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-rest">REST</span> colab-code-executor</td>
+          <td>HTTP</td>
+          <td><span class="tag tag-low">低</span></td>
+          <td>Jupyter カーネル管理・コード実行</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== SECTION 5: CAUTIONS ========== -->
+<section>
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>注意点とベストプラクティス</h2>
+  </div>
+
+  <h4>1. ngrok の動的 URL 問題</h4>
+  <p>
+    無料プランではセッションごとにランダムな URL が発行されます。PWA 側で URL をハードコードするのではなく、QR コード表示・手動入力フォーム・動的設定 API などで対応してください。
+  </p>
+
+  <h4>2. CORS の設定</h4>
+  <p>
+    PWA はブラウザ上で動作するため、Colab 側のサーバーで <code>Access-Control-Allow-Origin</code> ヘッダーを適切に設定しないとリクエストがブロックされます。開発中は <code>allow_origins=["*"]</code> でも、本番環境では特定のオリジンのみを許可してください。
+  </p>
+
+  <h4>3. 認証とセキュリティ</h4>
+  <p>
+    ngrok で公開した URL はインターネット上の誰でもアクセス可能です。API キー認証・トークンベース認証・IP 制限などを組み合わせて、不正アクセスを防止してください。
+  </p>
+
+  <h4>4. Colab セッションの維持</h4>
+  <p>
+    Colab の無料ランタイムは一定時間のアイドル状態で切断されます。以下のような keep-alive 処理を検討してください。
+  </p>
+
+  <div class="code-label">Python (keep-alive スクリプト例)</div>
+<pre><code>import time
+from threading import Thread
+
+def keep_alive():
+    while True:
+        time.sleep(60)
+        print("Keeping alive...")
+
+Thread(target=keep_alive, daemon=True).start()</code></pre>
+
+  <h4>5. ローカルランタイム接続（逆方向）</h4>
+  <p>
+    Colab からローカルマシン側の PWA やサーバーに接続したい場合は、Colab の「ローカルランタイム接続」機能を使用します。ローカルで Jupyter サーバーを起動し、Colab UI から接続します。
+    <a class="source-chip" href="https://research.google.com/colaboratory/local-runtimes.html" target="_blank">Colab Local Runtimes</a>
+  </p>
+
+  <div class="callout success">
+    <div class="callout-title">推奨構成</div>
+    <p>多くのユースケースでは「FastAPI + ngrok + CORS」の組み合わせが最も実用的です。AI エージェント的な統合が必要な場合は MCP over SSE を、リアルタイム性が求められる場合は WebSocket を選択してください。</p>
+  </div>
+</section>
+
+<!-- ========== SECTION 6: REFERENCES ========== -->
+<section>
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>参考リソース</h2>
+  </div>
+  <ul>
+    <li>
+      <strong>Google Colab MCP Server 発表記事</strong>
+      <a class="source-chip" href="https://developers.googleblog.com/en/announcing-the-colab-mcp-server-connect-any-ai-agent-to-google-colab/" target="_blank">Google Developers Blog</a>
+    </li>
+    <li>
+      <strong>colab-mcp (GitHub)</strong>
+      <a class="source-chip" href="https://github.com/googlecolab/colab-mcp" target="_blank">googlecolab/colab-mcp</a>
+    </li>
+    <li>
+      <strong>fastapi-mcp (GitHub)</strong>
+      <a class="source-chip" href="https://github.com/tadata-org/fastapi_mcp" target="_blank">tadata-org/fastapi_mcp</a>
+    </li>
+    <li>
+      <strong>FastAPI in Google Colab with ngrok</strong>
+      <a class="source-chip" href="https://gist.github.com/SalihTalha/8b9be8662f239ffbac4b31b2022288ea" target="_blank">GitHub Gist</a>
+    </li>
+    <li>
+      <strong>WebSocket Proxy for Colab</strong>
+      <a class="source-chip" href="https://gist.github.com/oeway/74632b5fd3fbb66e5dc2d54d065a8495" target="_blank">GitHub Gist: colab_websocket_proxy.py</a>
+    </li>
+    <li>
+      <strong>pyngrok ドキュメント</strong>
+      <a class="source-chip" href="https://pyngrok.readthedocs.io/" target="_blank">pyngrok.readthedocs.io</a>
+    </li>
+    <li>
+      <strong>Colab Local Runtimes</strong>
+      <a class="source-chip" href="https://research.google.com/colaboratory/local-runtimes.html" target="_blank">research.google.com</a>
+    </li>
+    <li>
+      <strong>MCP Streamable HTTP 仕様</strong>
+      <a class="source-chip" href="https://modelcontextprotocol.io/specification/draft/basic/transports/streamable-http" target="_blank">modelcontextprotocol.io</a>
+    </li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p>PWA から Google Colab への接続ガイド &mdash; 2026年9月版</p>
+  <p style="margin-top:0.4rem;">FastAPI / WebSocket / MCP / ngrok</p>
+</footer>
+
+<a href="../index.html" aria-label="アーカイブに戻る" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-block;padding:8px 14px;background:#f5f0e8;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #111;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;text-decoration:none;line-height:1;">&larr; Archives</a>
+</body>
+</html>

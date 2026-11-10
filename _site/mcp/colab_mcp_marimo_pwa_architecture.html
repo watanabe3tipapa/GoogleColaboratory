@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colab MCP Server × marimo × PWA 連携アーキテクチャ探査</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --ink: #202124;
+  --muted: #5F6368;
+  --accent: #F9AB00;
+  --accent-weak: color-mix(in oklab, var(--accent) 15%, var(--surface));
+  --accent-secondary: #3776AB;
+  --accent-secondary-weak: color-mix(in oklab, var(--accent-secondary) 10%, var(--surface));
+  --line: #DADCE0;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px -12px rgba(0,0,0,0.18);
+  --radius: 12px;
+  --space: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.2vw, 1.05rem);
+  --step-1: clamp(1.1rem, 1.05rem + 0.3vw, 1.25rem);
+  --step-2: clamp(1.4rem, 1.2rem + 0.8vw, 1.8rem);
+  --step-3: clamp(1.8rem, 1.5rem + 1.2vw, 2.4rem);
+  --step-4: clamp(2.2rem, 1.8rem + 1.6vw, 3.2rem);
+}
+
+* { box-sizing: border-box; margin: 0; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.8;
+  color: var(--ink);
+  background: var(--bg);
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Header / Hero */
+header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  color: #fff;
+  padding: calc(var(--space) * 3) var(--space);
+  position: relative;
+  overflow: hidden;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(249,171,0,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(55,118,171,0.10) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.header-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+header h1 {
+  font-size: var(--step-4);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  margin-bottom: calc(var(--space) * 0.8);
+}
+
+header h1 span {
+  color: var(--accent);
+}
+
+header .subtitle {
+  font-size: var(--step-1);
+  color: rgba(255,255,255,0.75);
+  font-weight: 400;
+  max-width: 60ch;
+}
+
+header .meta {
+  margin-top: calc(var(--space) * 1.2);
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+header .meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Layout */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: calc(var(--space) * 2) var(--space);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space) * 2.5);
+}
+
+/* Section numbering signature */
+section {
+  position: relative;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: calc(var(--space) * 1);
+}
+
+.section-number {
+  font-family: "JetBrains Mono", monospace;
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  opacity: 0.9;
+  flex-shrink: 0;
+  min-width: 2.5ch;
+  text-align: right;
+}
+
+section h2 {
+  font-size: var(--step-2);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  padding-top: 0.15em;
+}
+
+section h3 {
+  font-size: var(--step-1);
+  font-weight: 700;
+  margin-top: calc(var(--space) * 1.2);
+  margin-bottom: calc(var(--space) * 0.5);
+  color: var(--ink);
+}
+
+section p {
+  margin-bottom: 0.8em;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 1.2);
+  box-shadow: var(--shadow);
+  margin-bottom: calc(var(--space) * 1);
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+  margin: 1em 0;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.7em 0.8em;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+th {
+  font-weight: 600;
+  background: var(--accent-weak);
+  color: var(--ink);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:nth-child(even) td {
+  background: rgba(0,0,0,0.015);
+}
+
+/* Code blocks */
+pre {
+  background: #1e1e2e;
+  color: #e8e8f0;
+  padding: 1.2em;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85em;
+  line-height: 1.6;
+  margin: 1em 0;
+}
+
+code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+}
+
+:not(pre) > code {
+  background: var(--accent-secondary-weak);
+  color: var(--accent-secondary);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* Architecture diagrams */
+.arch-diagram {
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8f0fe 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5em;
+  margin: 1em 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85em;
+  line-height: 1.8;
+  color: var(--ink);
+  overflow-x: auto;
+  position: relative;
+}
+
+.arch-diagram .box {
+  display: inline-block;
+  padding: 0.3em 0.8em;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.box.pwa { background: #fff3cd; border: 1px solid #f9ab00; color: #856404; }
+.box.colab { background: #d1ecf1; border: 1px solid #3776ab; color: #0c5460; }
+.box.marimo { background: #d4edda; border: 1px solid #28a745; color: #155724; }
+.box.tunnel { background: #e2e3f3; border: 1px solid #6c63ff; color: #383673; }
+.box.bridge { background: #f8d7da; border: 1px solid #dc3545; color: #721c24; }
+
+.arrow {
+  color: var(--muted);
+  margin: 0 0.5em;
+}
+
+/* Pattern labels */
+.pattern-label {
+  display: inline-block;
+  background: var(--accent);
+  color: #1a1a2e;
+  font-size: 0.75em;
+  font-weight: 700;
+  padding: 0.2em 0.6em;
+  border-radius: 4px;
+  margin-right: 0.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Lists */
+ul, ol {
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+li {
+  margin-bottom: 0.4em;
+}
+
+/* Comparison grid */
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1em;
+  margin: 1em 0;
+}
+
+.compare-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1em;
+}
+
+.compare-item h4 {
+  font-size: 0.95em;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  color: var(--accent-secondary);
+}
+
+/* Recommendation badge */
+.rec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  background: #d4edda;
+  color: #155724;
+  font-size: 0.8em;
+  font-weight: 700;
+  padding: 0.3em 0.8em;
+  border-radius: 999px;
+  margin-bottom: 0.8em;
+}
+
+/* Step list */
+.step-list {
+  counter-reset: step;
+  list-style: none;
+  padding-left: 0;
+}
+
+.step-list > li {
+  position: relative;
+  padding-left: 2.8em;
+  margin-bottom: 1.2em;
+  min-height: 2em;
+}
+
+.step-list > li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  width: 1.8em;
+  height: 1.8em;
+  background: var(--accent);
+  color: #1a1a2e;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 700;
+  font-size: 0.85em;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: calc(var(--space) * 2) var(--space);
+  color: var(--muted);
+  font-size: 0.85em;
+  border-top: 1px solid var(--line);
+  margin-top: calc(var(--space) * 2);
+}
+
+/* Print */
+@media print {
+  body { background: #fff; }
+  header { background: #1a1a2e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card, .arch-diagram, table { box-shadow: none; border: 1px solid #ccc; }
+}
+
+@page { size: A4; margin: 15mm; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .section-header { flex-direction: column; gap: 0.3rem; }
+  .section-number { text-align: left; }
+  .compare-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Colab MCP Server <span>×</span> marimo <span>×</span> PWA<br>連携アーキテクチャ探査</h1>
+    <p class="subtitle">Google Colab上で動作するMCPサーバ（marimo）と、専用PWAクライアントアプリとの間で連携作業を実現するための手法調査と推奨構成の提案</p>
+    <div class="meta">
+      <span>📅 2026年9月8日</span>
+      <span>📝 技術調査レポート</span>
+      <span>🔖 MCP / marimo / PWA</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="section-header">
+    <div class="section-number">01</div>
+    <h2>前提と制約の整理</h2>
+  </div>
+
+  <h3>1.1 各コンポーネントの役割</h3>
+  <table>
+    <tr>
+      <th>コンポーネント</th>
+      <th>本来の役割</th>
+      <th>注意点</th>
+    </tr>
+    <tr>
+      <td><strong>colab-mcp</strong><br><span style="font-size:0.85em;color:var(--muted)">(googlecolab/colab-mcp)</span></td>
+      <td>ローカルマシンで動くMCPサーバ。ローカルエージェント（Claude Code, Gemini CLIなど）と、ブラウザ内のColabセッションを橋渡しする。</td>
+      <td><strong>PWA（ブラウザ）から直接使う設計ではない</strong>。ローカル→Colabの方向性が前提。</td>
+    </tr>
+    <tr>
+      <td><strong>marimo</strong></td>
+      <td>Pythonのリアクティブノートブック。<code>--mcp</code> フラグ付きで起動すると、<strong>MCPサーバとして機能</strong>し、<code>/mcp/server</code> エンドポイントを提供する。</td>
+      <td>Colab上で <code>marimo edit --mcp --headless</code> で起動可能。</td>
+    </tr>
+    <tr>
+      <td><strong>PWA</strong></td>
+      <td>プログレッシブウェブアプリ。ブラウザ上で動作し、オフライン対応やネイティブライクなUIが可能。</td>
+      <td>MCPライアントとして振る舞う必要がある。</td>
+    </tr>
+  </table>
+
+  <h3>1.2 技術的制約</h3>
+  <div class="compare-grid">
+    <div class="compare-item">
+      <h4>🔒 Colabのネットワーク</h4>
+      <p>外部から直接アクセスできない。<code>google.colab.kernel.proxyPort()</code> でプロキシURLを発行する必要がある。</p>
+    </div>
+    <div class="compare-item">
+      <h4>🌐 CORS</h4>
+      <p>ブラウザから別オリジンのMCPサーバにアクセスする場合、CORS対応が必須。</p>
+    </div>
+    <div class="compare-item">
+      <h4>📡 MCPトランスポート</h4>
+      <p>ブラウザからは <strong>HTTP/SSE</strong> または <strong>WebSocket</strong> が現実的。Stdioは使えない。</p>
+    </div>
+    <div class="compare-item">
+      <h4>⏱️ セッション継続性</h4>
+      <p>Colabは一定時間アイドルで切断される。長時間のMCP接続には工夫が必要。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <div class="section-number">02</div>
+    <h2>提案アーキテクチャ（4パターン）</h2>
+  </div>
+
+  <!-- Pattern A -->
+  <div class="card">
+    <span class="pattern-label">Pattern A</span>
+    <h3>PWA → Colab上のmarimo MCPサーバ（直接HTTP接続）</h3>
+    <p>最もシンプルな構成。PWAがブラウザ内のMCPクライアントとして、Colab上のmarimoのMCPエンドポイントに直接接続する。</p>
+
+    <div class="arch-diagram">
+      <span class="box pwa">PWA (MCP Client)</span>
+      <span class="arrow">←──HTTP/SSE──→</span>
+      <span class="box marimo">Colab上のmarimo (MCP Server)</span>
+    </div>
+
+    <h4>Colab側（サーバ）</h4>
+    <pre>!pip -q install -U "marimo[mcp]"
+
+import secrets
+from google.colab.output import eval_js
+
+PORT = 8888
+TOKEN = secrets.token_urlsafe(16)
+NOTEBOOK = "/content/notebook.py"
+
+# バックグラウンドでmarimo MCPサーバを起動
+!marimo edit {NOTEBOOK}   --headless   --host 0.0.0.0   --port {PORT}   --token-password "{TOKEN}"   --mcp   --mcp-allow-remote   > /content/marimo.log 2>&1 &
+
+# プロキシURL取得
+proxy_url = eval_js(f"google.colab.kernel.proxyPort({PORT})")
+print(f"MCP Endpoint: {proxy_url}/mcp/server?access_token={TOKEN}")</pre>
+
+    <h4>PWA側（クライアント / React例）</h4>
+    <pre>import { useMcp } from 'use-mcp/react';
+
+function App() {
+  const { state, tools, callTool } = useMcp({
+    url: 'https://xxxx-colab-googleusercontent.com/mcp/server?access_token=TOKEN'
+  });
+
+  return (
+    &lt;div&gt;
+      {state === 'ready' && (
+        &lt;button onClick={() => callTool('active_notebooks', {})}&gt;
+          ノートブック一覧取得
+        &lt;/button&gt;
+      )}
+    &lt;/div&gt;
+  );
+}</pre>
+
+    <table>
+      <tr><th>観点</th><th>評価</th></tr>
+      <tr><td>メリッ</td><td>構成がシンプル。追加インフラ不要。marimoのAIツール（ノートブック読み取り、エラー集計など）をPWAから直接利用可能。</td></tr>
+      <tr><td>デメリット</td><td>CORS対応が必要。ColabのプロキシURLはセッションごとに変わるためPWAに都度入力が必要。トークン埋め込みはセキュリティリスク。</td></tr>
+    </table>
+  </div>
+
+  <!-- Pattern B -->
+  <div class="card">
+    <span class="pattern-label">Pattern B</span>
+    <h3>公開トンネル経由で接続（ngrok / Cloudflare Tunnel）</h3>
+    <p>Colab上のmarimo MCPサーバを、外部からアクセス可能なURLに公開し、PWAからそこに接続する。</p>
+
+    <div class="arch-diagram">
+      <span class="box pwa">PWA (MCP Client)</span>
+      <span class="arrow">←──HTTPS──→</span>
+      <span class="box tunnel">ngrok / Cloudflare Tunnel</span>
+      <span class="arrow">←──→</span>
+      <span class="box marimo">Colab上のmarimo</span>
+    </div>
+
+    <h4>Colab側</h4>
+    <pre>!pip -q install -U "marimo[mcp]" pyngrok
+
+from pyngrok import ngrok
+import secrets
+
+PORT = 8888
+TOKEN = secrets.token_urlsafe(16)
+
+# ngrokでトンネル作成
+public_url = ngrok.connect(PORT, "http").public_url
+print(f"Public URL: {public_url}/mcp/server?access_token={TOKEN}")
+
+# marimo起動
+!marimo edit /content/notebook.py   --headless --host 0.0.0.0 --port {PORT}   --token-password "{TOKEN}" --mcp --mcp-allow-remote</pre>
+
+    <table>
+      <tr><th>観点</th><th>評価</th></tr>
+      <tr><td>メリット</td><td>URLが固定（トンネル存続中）で、PWAに組み込みやすい。パターンAより接続が安定。</td></tr>
+      <tr><td>デメリット</td><td>インターネットに公開されるためトークン認証・IP制限が必須。ngrok無料版は接続数・時間に制限あり。Colabのセッション制限に抵触する可能性。</td></tr>
+    </table>
+  </div>
+
+  <!-- Pattern C -->
+  <div class="card">
+    <span class="pattern-label">Pattern C</span>
+    <h3>PWAがMCPサーバ、ColabがMCPクライアント（逆方向）</h3>
+    <p><code>@teatak/mcp-server-browser</code> のように、<strong>PWA側がMCPサーバ</strong>となり、Colab側（Python）から接続して作業を指示する構成。</p>
+
+    <div class="arch-diagram">
+      <span class="box colab">Colab (Python MCP Client)</span>
+      <span class="arrow">←──WebSocket──→</span>
+      <span class="box pwa">PWA (MCP Server in Browser)</span>
+    </div>
+
+    <h4>PWA側（MCPサーバ）</h4>
+    <pre>import { createServer } from "@teatak/mcp-server-browser";
+
+const server = createServer({
+  endpoint: "wss://your-bridge-server.com/mcp/ws",
+  serverInfo: { name: "pwa-client", version: "1.0.0" },
+});
+
+server.registerTool({
+  name: "get_user_input",
+  description: "PWAからユーザーの入力を取得",
+  inputSchema: { type: "object", properties: {} },
+  handler: async () => {
+    const result = await showPromptDialog(); // PWAのUI関数
+    return { content: [{ type: "text", text: result }] };
+  },
+});
+
+server.connect();</pre>
+
+    <table>
+      <tr><th>観点</th><th>評価</th></tr>
+      <tr><td>メリット</td><td>PWAの能力（カメラ、GPS、通知、IndexedDBなど）をColab/Python側から利用可能。人間の確認を挟みやすい。</td></tr>
+      <tr><td>デメリット</td><td>ブリッジサーバ（WebSocket中継）が別途必要。データの流れが逆になるため、ノートブック操作をPWAから行う用途には不向き。</td></tr>
+    </table>
+  </div>
+
+  <!-- Pattern D -->
+  <div class="card">
+    <span class="pattern-label">Pattern D</span>
+    <h3>colab-mcpの本来の使い方（ローカルエージェント経由）</h3>
+    <p>colab-mcpは「ローカルエージェント→Colab」方向の設計。PWAを「ローカルエージェントの代替」として使うには橋渡しが必要。</p>
+
+    <div class="arch-diagram">
+      <span class="box pwa">PWA</span>
+      <span class="arrow">←──Web/API──→</span>
+      <span class="box bridge">ローカルMCPブリッジ<br>(Node/Python)</span>
+      <span class="arrow">←──Stdio──→</span>
+      <span class="box colab">colab-mcp</span>
+      <span class="arrow">←──→</span>
+      <span class="box marimo">Colabセッション</span>
+    </div>
+
+    <table>
+      <tr><th>観点</th><th>評価</th></tr>
+      <tr><td>メリット</td><td>Google公式のcolab-mcpをそのまま活用。ローカルマシンのリソースを使わずにColab上でPythonコードを実行可能。</td></tr>
+      <tr><td>デメリット</td><td>ブラウザからローカルホストへの接続はCORSやセキュリティ制約が厳しい。PWAよりもElectronやTauri製のデスクトップアプリで実装する方が現実的。</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <div class="section-number">03</div>
+    <h2>推奨構成と実装ステップ</h2>
+  </div>
+
+  <div class="rec-badge">✓ 推奨</div>
+  <p><strong>パターンA + パターンBのハイブリッド</strong>が最も現実的です。開発時はColabプロキシURLをPWAに手動入力し、本番運用時にはCloudflare Tunnel等で固定URL化することで、PWAからのシームレスな連携が実現できます。</p>
+
+  <h3>実装ステップ</h3>
+  <ol class="step-list">
+    <li>
+      <strong>Colab上でmarimo MCPサーバを起動</strong>
+      <pre>!pip -q install -U "marimo[mcp]"
+
+import secrets
+from google.colab.output import eval_js
+
+PORT = 8888
+TOKEN = secrets.token_urlsafe(16)
+NOTEBOOK = "/content/app.py"
+
+!pkill -f "marimo" || true
+
+!marimo edit {NOTEBOOK}   --headless --host 0.0.0.0 --port {PORT}   --token-password "{TOKEN}" --mcp --mcp-allow-remote   > /content/marimo.log 2>&1 &
+
+proxy_url = eval_js(f"google.colab.kernel.proxyPort({PORT})")
+mcp_url = f"{proxy_url}/mcp/server?access_token={TOKEN}"
+print(f"
+=== MCP Server URL ===
+{mcp_url}
+")</pre>
+    </li>
+    <li>
+      <strong>PWAプロジェクトの作成</strong>
+      <pre>npx create-react-app marimo-pwa --template cra-template-pwa
+cd marimo-pwa
+npm install use-mcp react-json-view</pre>
+    </li>
+    <li>
+      <strong>PWAでのMCP接続コンポーネント実装</strong>
+      <pre>import React, { useState } from 'react';
+import { useMcp } from 'use-mcp/react';
+
+export function McpClient() {
+  const [serverUrl, setServerUrl] = useState('');
+  const { state, tools, callTool, error, log } = useMcp({
+    url: serverUrl,
+    debug: true,
+  });
+
+  return (
+    &lt;div className="p-4"&gt;
+      &lt;h1&gt;marimo MCP PWA Client&lt;/h1&gt;
+      &lt;input
+        type="text"
+        value={serverUrl}
+        onChange={(e) => setServerUrl(e.target.value)}
+        placeholder="ColabのMCP URLを貼り付け"
+      /&gt;
+      &lt;div&gt;状態: {state}&lt;/div&gt;
+      {state === 'ready' && tools?.map((tool) => (
+        &lt;button key={tool.name}
+          onClick={() => callTool(tool.name, {})}&gt;
+          実行: {tool.name}
+        &lt;/button&gt;
+      ))}
+    &lt;/div&gt;
+  );
+}</pre>
+    </li>
+    <li>
+      <strong>認証・セキュリティの強化</strong>
+      <p>URLクエリではなく <code>Sec-WebSocket-Protocol</code> ヘッダや <code>Authorization</code> ヘッダでトークンを送信します。PWAのService Workerでプロキシし、トークンを隠蔽することも検討してください。</p>
+      <pre>const { state, tools, callTool } = useMcp({
+  url: serverUrl.split('?')[0],
+  headers: {
+    'Authorization': `Bearer ${TOKEN}`
+  },
+  protocols: [`bearer.${TOKEN}`],
+});</pre>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <h2>技術的課題と対策</h2>
+  </div>
+
+  <table>
+    <tr>
+      <th>課題</th>
+      <th>対策</th>
+    </tr>
+    <tr>
+      <td><strong>CORSエラー</strong></td>
+      <td>marimoを <code>--mcp-allow-remote</code> で起動。リバースプロキシ（nginx/Cloudflare）で <code>Access-Control-Allow-Origin</code> を設定。</td>
+    </tr>
+    <tr>
+      <td><strong>URLの短命性</strong></td>
+      <td>ngrok/Cloudflare Tunnelで固定ドメインを使用。または、QRコードでPWAにURLを簡単に引き渡す。</td>
+    </tr>
+    <tr>
+      <td><strong>トークン漏洩</strong></td>
+      <td>URLクエリではなく <code>Sec-WebSocket-Protocol</code> ヘッダや <code>Authorization</code> ヘッダで送信。PWAのService Workerでプロキシし、トークンを隠蔽。</td>
+    </tr>
+    <tr>
+      <td><strong>Colabセッション切断</strong></td>
+      <td>定期的なping（WebSocketの場合）や、PWA側での再接続ロジックを実装。<code>use-mcp</code> は動リトライに対応。</td>
+    </tr>
+    <tr>
+      <td><strong>MCPプロトコルの互換性</strong></td>
+      <td>marimoのMCPは実験的機能。PWA側も <code>use-mcp</code> など最新ライブラリを使用し、プロトコルバージョンを確認。</td>
+    </tr>
+  </table>
+</section>
+
+<section>
+  <div class="section-header">
+    <div class="section-number">05</div>
+    <h2>代替・関連手法</h2>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-item">
+      <h4>📦 marimo-mcp<br><span style="font-size:0.8em;color:var(--muted)">(Vladisluv12/marimo-mcp)</span></h4>
+      <p>実行中のmarimoノートブックを<strong>自動検出</strong>し、読み取り・編集・実行ツールを公開するMCPサーバ。Colab上で動作さることで、より細かいノートブック操作が可能。</p>
+    </div>
+    <div class="compare-item">
+      <h4>🪄 marimo-magic</h4>
+      <p>既存のJupyter/Colab環境でmarimoセルを埋め込むことが可能。ただし、MCP連携にはパターンA/Bがより直接的。</p>
+    </div>
+    <div class="compare-item">
+      <h4>☁️ molab<br><span style="font-size:0.8em;color:var(--muted)">(marimo公式クラウド)</span></h4>
+      <p>Colabを使わず、marimo公式の無料クラウド環境を使う選択肢。marimoネイティブでMCPサポートが充実しており、PWA連携の実装が容易になる可能性がある。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-header">
+    <div class="section-number">06</div>
+    <h2>まとめ</h2>
+  </div>
+
+  <table>
+    <tr>
+      <th>目的</th>
+      <th>推奨パターン</th>
+    </tr>
+    <tr>
+      <td>PWAからColab上のmarimoを直接操作したい</td>
+      <td><strong>パターンA / B</strong>（marimo MCPサーバをHTTP/SSEで公開）</td>
+    </tr>
+    <tr>
+      <td>PWAの機能（カメラ、センサー）をColab/Pythonに使わせたい</td>
+      <td><strong>パターンC</strong>（PWAがMCPサーバ）</td>
+    </tr>
+    <tr>
+      <td>Google公式のColab連携を最大限活用したい</td>
+      <td><strong>パターンD</strong>（ただしPWAよりデスクトップアプリが適）</td>
+    </tr>
+  </table>
+
+  <p style="margin-top:1.5em;">最も現実的なのは、<strong>Colab上で <code>marimo edit --mcp</code> を起動し、そのHTTPエンドポイントをPWAから <code>use-mcp</code> などのブラウザクライアントで接続するパターンA/B</strong> です。開発時はColabのプロキシURLを手動入力し、本番運用時にはCloudflare Tunnel等で固定URL化することで、PWAからのシームレスな連携が実現できます。</p>
+</section>
+
+</main>
+
+<footer>
+  <p>Colab MCP Server × marimo × PWA 連携アーキテクチャ探査 / 2026年9月8日</p>
+  <p style="margin-top:0.3em;font-size:0.8em;color:#999;">本レポートは公開情報に基づく技術調査であり、構成の検証を前提としています。</p>
+</footer>
+
+<a href="../index.html" aria-label="アーカイブに戻る" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-block;padding:8px 14px;background:#f5f0e8;color:#111;border:3px solid #111;box-shadow:4px 4px 0 #111;font-family:'SF Mono',ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;text-decoration:none;line-height:1;">&larr; Archives</a>
+</body>
+</html>

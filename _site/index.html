@@ -117,10 +117,11 @@ ul.task-list li input[type="checkbox"] {
 <header class="hero">
   <div class="hero-eyebrow">ls -la ./notebooks</div>
   <h1 class="hero-title">Google Colab<br>Archives</h1>
-  <p class="hero-lead">ワークショップや実験で使った Google Colab ノートブックを、カテゴリー別に陳列したアーカイブです。気になるノートブックは、そのまま Colab で開いて実行できます。</p>
+  <p class="hero-lead">ワークショップや実験で使った Google Colab ノートブックと技術ガイドを、カテゴリー別に陳列したアーカイブです。気になるノートブックは、そのまま Colab で開いて実行できます。</p>
   <div class="hero-meta">
-    <span class="meta-pill"><span class="dot"></span>公開中: <strong>7</strong> ノートブック</span>
-    <span class="meta-pill"><strong>4</strong> カテゴリ</span>
+    <span class="meta-pill"><span class="dot"></span>公開中: <strong>8</strong> ノートブック</span>
+    <span class="meta-pill"><strong>3</strong> ガイド</span>
+    <span class="meta-pill"><strong>5</strong> カテゴリ</span>
     <span class="meta-pill">Quarto + GitHub Pages</span>
   </div>
 </header>
@@ -129,12 +130,13 @@ ul.task-list li input[type="checkbox"] {
   <div class="update-panel-top">
     <div>
       <p class="panel-kicker">ARCHIVE STATUS</p>
-      <h2 class="anchored">すべてのノートブックを公開中です</h2>
+      <h2 class="anchored">すべてのコンテンツを公開中です</h2>
       <p class="panel-copy">main ブランチへの push をきっかけに、GitHub Actions がサイトを自動デプロイします。</p>
     </div>
     <div class="update-metrics">
-      <div class="metric"><span>収録</span><strong>7</strong></div>
-      <div class="metric"><span>カテゴリ</span><strong>4</strong></div>
+      <div class="metric"><span>収録</span><strong>8</strong></div>
+      <div class="metric"><span>ガイド</span><strong>3</strong></div>
+      <div class="metric"><span>カテゴリ</span><strong>5</strong></div>
     </div>
   </div>
   <div class="change-area">
@@ -144,6 +146,7 @@ ul.task-list li input[type="checkbox"] {
       <li class="change-row"><span class="change-badge">network</span><strong>ネットワーク</strong><span class="change-version"><span class="version-chip">3 件</span></span></li>
       <li class="change-row"><span class="change-badge">data</span><strong>データ処理</strong><span class="change-version"><span class="version-chip">1 件</span></span></li>
       <li class="change-row"><span class="change-badge">llm</span><strong>LLM</strong><span class="change-version"><span class="version-chip">1 件</span></span></li>
+      <li class="change-row"><span class="change-badge">mcp</span><strong>MCP / 自動化</strong><span class="change-version"><span class="version-chip">4 件</span></span></li>
     </ul>
   </div>
 </section>
@@ -285,6 +288,75 @@ ul.task-list li input[type="checkbox"] {
         <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/llm/strata_colab_guide.ipynb" target="_blank" rel="noopener">github ↗</a>
       </div>
       <div class="card-footer"><span class="prompt">$</span> llm/strata_colab_guide.ipynb</div>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="mcp">
+  <div class="section-header">
+    <h2 class="section-title anchored"><span class="section-number">05</span>MCP / 自動化</h2>
+    <p class="section-desc">Colab を AI エージェントや PWA から活用する</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title anchored">Colab MCP × CMS <span class="tag">guide</span></h3>
+      </div>
+      <p class="card-body">Colab 上の MCP Server を Web サービスとして公開し、PWA クライアントから CMS を構成する完全ガイド。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>HTML</strong></div>
+        <div><span class="label">Type</span><strong>Guide</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="mcp/colab-mcp-cms-guide.html" target="_blank" rel="noopener">read ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab-mcp-cms-guide.html" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> mcp/<wbr>colab-mcp-cms-guide.html</div>
+    </article>
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title anchored">MCP × marimo × PWA <span class="tag">guide</span></h3>
+      </div>
+      <p class="card-body">Google Colab 上の MCP サーバー（marimo）と PWA クライアントの連携アーキテクチャを探る技術調査レポート。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>HTML</strong></div>
+        <div><span class="label">Type</span><strong>Guide</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="mcp/colab_mcp_marimo_pwa_architecture.html" target="_blank" rel="noopener">read ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_mcp_marimo_pwa_architecture.html" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> mcp/<wbr>colab_mcp_marimo_pwa_architecture.html</div>
+    </article>
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title anchored">PWA × Colab 接続ガイド <span class="tag">guide</span></h3>
+      </div>
+      <p class="card-body">PWA から Colab の GPU / TPU を活用するための接続方法を、実装コードとともに解説。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>HTML</strong></div>
+        <div><span class="label">Type</span><strong>Guide</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="mcp/pwa-colab-connection-guide.html" target="_blank" rel="noopener">read ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/pwa-colab-connection-guide.html" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> mcp/<wbr>pwa-colab-connection-guide.html</div>
+    </article>
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title anchored">colab_gui_desktop <span class="tag">demo</span></h3>
+      </div>
+      <p class="card-body">Xvfb + noVNC の仮想デスクトップを立て、PyAutoGUI / Selenium で Colab を GUI 操作するデモ。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Run</span><strong>Google Colab</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_gui_desktop.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_gui_desktop.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> mcp/<wbr>colab_gui_desktop.ipynb</div>
     </article>
   </div>
 </section>
