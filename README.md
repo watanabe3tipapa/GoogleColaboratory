@@ -1,54 +1,68 @@
-# GoogleColaboratory (Archives)
+# Google Colaboratory Archives
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb)
+Google Colab で使用したノートブックを、用途ごとに整理して公開しているアーカイブです。
+各ノートブックはそのまま Colab で開いて実行できます。
 
-概要
+**公開サイト:** https://watanabe3tipapa.github.io/GoogleColaboratory/
 
-このリポジトリは、Jupyter Notebook（.ipynb）ファイルの格納を目的としたディレクトリです。リポジトリ内のノートブックは Google Drive の「Colab Notebooks」ディレクトリと同期して利用することを想定しています。
+## 収録ノートブック
 
-ホームページ: https://watanabe3tipapa.github.io/GoogleColaboratory/
+| カテゴリー | ノートブック | 内容 | Colab |
+|---|---|---|---|
+| setup | [BaseGitHub2GoogleColaboratory.ipynb](setup/BaseGitHub2GoogleColaboratory.ipynb) | GitHub 上のノートブックを Colab から直接開くための下準備 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/setup/BaseGitHub2GoogleColaboratory.ipynb) |
+| setup | [method4colab_ssh.ipynb](setup/method4colab_ssh.ipynb) | Colab に SSH 接続する方法（現在は利用規約で禁止／学習用） | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb) |
+| network | [telnets_2023_09_07.ipynb](network/telnets_2023_09_07.ipynb) | インターネット公告（シンプル版） | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023_09_07.ipynb) |
+| network | [telnets_2023−09_07_chat_by_Go.ipynb](network/telnets_2023−09_07_chat_by_Go.ipynb) | インターネット公告（チャット版） | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_chat_by_Go.ipynb) |
+| network | [telnets_2023−09_07_notalk_by_Go.ipynb](network/telnets_2023−09_07_notalk_by_Go.ipynb) | インターネット公告（発話なし版） | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/network/telnets_2023%E2%88%9209_07_notalk_by_Go.ipynb) |
+| data | [getrails.ipynb](data/getrails.ipynb) | 都道府県の鉄道路線を探査し、駅名と緯度・経度を取得 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/data/getrails.ipynb) |
+| llm | [strata_colab_guide.ipynb](llm/strata_colab_guide.ipynb) | Colab 上で Strata 推論エンジンを動かし、OpenAI 互換 API で利用 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/llm/strata_colab_guide.ipynb) |
 
-主な内容
+## ディレクトリ構成
 
-- カテゴリー別の .ipynb ノートブック群（下記「ディレクトリ構成」参照）
-- index.qmd / Quarto 関連ファイル
-- LICENSE.md（ライセンス情報はこのファイルをご確認ください）
+```text
+.
+├── setup/     Colab の準備（接続・SSH）
+├── network/   ネットワーク（インターネット公告）
+├── data/      データ処理（路線・駅名）
+├── llm/       LLM（Strata）
+├── assets/    サイト用画像
+├── index.qmd  サイトのトップページ
+├── _quarto.yml
+├── _site/     Quarto のビルド成果物（GitHub Pages で公開）
+└── LICENSE.md
+```
 
-ディレクトリ構成
+## 使い方
 
-- `setup/` … Colab の準備
-  - BaseGitHub2GoogleColaboratory.ipynb
-  - method4colab_ssh.ipynb
-- `network/` … ネットワーク
-  - telnets_2023_09_07.ipynb
-  - telnets_2023−09_07_chat_by_Go.ipynb
-  - telnets_2023−09_07_notalk_by_Go.ipynb
-- `data/` … データ処理
-  - getrails.ipynb
-- `llm/` … LLM
-  - strata_colab_guide.ipynb
-- ルート … index.qmd, _quarto.yml, _site, assets, LICENSE.md
+1. 上の表、または[公開サイト](https://watanabe3tipapa.github.io/GoogleColaboratory/)からノートブックを選びます。
+2. 「開く」を押すと Google Colab が起動します。
+3. メニューの「ランタイム」→「すべてのセルを実行」で上から順に実行します。
 
-利用上の注意
+> ノートブックによっては GPU の利用や大容量のディスク空き容量が必要です。各ノートブック冒頭の説明を確認してください。
 
-- setup/method4colab_ssh.ipynb に記載された「ssh を使う方法」については、README 内でも注意がある通り、Google Colaboratory の利用規約により禁止されているとされています。当該ノートブックは技術学習の参考として扱ってください（該当ノートブックの参照: https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb）。
+## サイトのビルド
 
-履歴・状態
+このリポジトリのサイトは [Quarto](https://quarto.org/) で生成しています。
 
-- このディレクトリは (2022-03-15) に Codespaces を利用して編集できるようになった旨の記述があります。
-- README に含まれる情報はリポジトリ内のファイルを元にしており、最終更新日時はリポジトリのメタデータをご確認ください。
-- リポジトリは "Archives" として整理されています。アーカイブ状態（GitHub の Archive フラグ）はメタデータをご確認ください。
+```bash
+# 初回のみ
+brew install quarto   # または公式インストーラー
 
-ライセンス
+# プレビュー（ローカルサーバー起動）
+quarto preview
 
-- リポジトリに LICENSE.md が含まれています。具体的なライセンス条件はそのファイルを参照してください。
+# ビルド（_site/ に出力）
+quarto render
+```
 
-参照リンク
+`main` ブランチへ push すると、GitHub Actions が `_site/` を GitHub Pages へデプロイします。
 
-- リポジトリ・ホームページ: https://watanabe3tipapa.github.io/GoogleColaboratory/
-- setup/method4colab_ssh.ipynb（リポジトリ内）: https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/setup/method4colab_ssh.ipynb
-- Colab デモ（バッジ先、外部リポジトリ）: https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb
+## 注意事項
 
-補足
+- **`setup/method4colab_ssh.ipynb` の SSH 接続は、Google Colaboratory の利用規約により禁止されています。** 技術学習の参考としてのみ扱い、実際の運用には使用しないでください。
+- `llm/strata_colab_guide.ipynb` はモデルのダウンロードに約 70 GB の空き容量を使用します。GPU（L4 / A100 推奨）の利用料金にもご注意ください。
+- ノートブックの実行によって生じた結果・損害について、作者は責任を負いません。
 
-- この README はリポジトリ内に既にある情報を整理・再構成したものです。利用方法の具体的手順や追加の操作コマンドなどは、各ノートブックや関連ファイルの内容を確認してください。
+## ライセンス
+
+[MIT License](LICENSE.md) — Copyright (c) 2021 Toru Watanabe
