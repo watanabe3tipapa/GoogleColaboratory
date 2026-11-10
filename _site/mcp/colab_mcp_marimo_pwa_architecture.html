@@ -384,6 +384,8 @@ footer {
   .compare-grid { grid-template-columns: 1fr; }
 }
 </style>
+<link rel="stylesheet" href="guide-theme.css">
+
 </head>
 <body>
 
@@ -408,7 +410,7 @@ footer {
   </div>
 
   <h3>1.1 各コンポーネントの役割</h3>
-  <table>
+  <div class="table-wrap"><table>
     <tr>
       <th>コンポーネント</th>
       <th>本来の役割</th>
@@ -429,7 +431,7 @@ footer {
       <td>プログレッシブウェブアプリ。ブラウザ上で動作し、オフライン対応やネイティブライクなUIが可能。</td>
       <td>MCPライアントとして振る舞う必要がある。</td>
     </tr>
-  </table>
+  </table></div>
 
   <h3>1.2 技術的制約</h3>
   <div class="compare-grid">
@@ -506,11 +508,11 @@ function App() {
   );
 }</pre>
 
-    <table>
+    <div class="table-wrap"><table>
       <tr><th>観点</th><th>評価</th></tr>
       <tr><td>メリッ</td><td>構成がシンプル。追加インフラ不要。marimoのAIツール（ノートブック読み取り、エラー集計など）をPWAから直接利用可能。</td></tr>
       <tr><td>デメリット</td><td>CORS対応が必要。ColabのプロキシURLはセッションごとに変わるためPWAに都度入力が必要。トークン埋め込みはセキュリティリスク。</td></tr>
-    </table>
+    </table></div>
   </div>
 
   <!-- Pattern B -->
@@ -543,11 +545,11 @@ print(f"Public URL: {public_url}/mcp/server?access_token={TOKEN}")
 # marimo起動
 !marimo edit /content/notebook.py   --headless --host 0.0.0.0 --port {PORT}   --token-password "{TOKEN}" --mcp --mcp-allow-remote</pre>
 
-    <table>
+    <div class="table-wrap"><table>
       <tr><th>観点</th><th>評価</th></tr>
       <tr><td>メリット</td><td>URLが固定（トンネル存続中）で、PWAに組み込みやすい。パターンAより接続が安定。</td></tr>
       <tr><td>デメリット</td><td>インターネットに公開されるためトークン認証・IP制限が必須。ngrok無料版は接続数・時間に制限あり。Colabのセッション制限に抵触する可能性。</td></tr>
-    </table>
+    </table></div>
   </div>
 
   <!-- Pattern C -->
@@ -582,11 +584,11 @@ server.registerTool({
 
 server.connect();</pre>
 
-    <table>
+    <div class="table-wrap"><table>
       <tr><th>観点</th><th>評価</th></tr>
       <tr><td>メリット</td><td>PWAの能力（カメラ、GPS、通知、IndexedDBなど）をColab/Python側から利用可能。人間の確認を挟みやすい。</td></tr>
       <tr><td>デメリット</td><td>ブリッジサーバ（WebSocket中継）が別途必要。データの流れが逆になるため、ノートブック操作をPWAから行う用途には不向き。</td></tr>
-    </table>
+    </table></div>
   </div>
 
   <!-- Pattern D -->
@@ -605,11 +607,11 @@ server.connect();</pre>
       <span class="box marimo">Colabセッション</span>
     </div>
 
-    <table>
+    <div class="table-wrap"><table>
       <tr><th>観点</th><th>評価</th></tr>
       <tr><td>メリット</td><td>Google公式のcolab-mcpをそのまま活用。ローカルマシンのリソースを使わずにColab上でPythonコードを実行可能。</td></tr>
       <tr><td>デメリット</td><td>ブラウザからローカルホストへの接続はCORSやセキュリティ制約が厳しい。PWAよりもElectronやTauri製のデスクトップアプリで実装する方が現実的。</td></tr>
-    </table>
+    </table></div>
   </div>
 </section>
 
@@ -704,7 +706,7 @@ export function McpClient() {
     <h2>技術的課題と対策</h2>
   </div>
 
-  <table>
+  <div class="table-wrap"><table>
     <tr>
       <th>課題</th>
       <th>対策</th>
@@ -729,7 +731,7 @@ export function McpClient() {
       <td><strong>MCPプロトコルの互換性</strong></td>
       <td>marimoのMCPは実験的機能。PWA側も <code>use-mcp</code> など最新ライブラリを使用し、プロトコルバージョンを確認。</td>
     </tr>
-  </table>
+  </table></div>
 </section>
 
 <section>
@@ -760,7 +762,7 @@ export function McpClient() {
     <h2>まとめ</h2>
   </div>
 
-  <table>
+  <div class="table-wrap"><table>
     <tr>
       <th>目的</th>
       <th>推奨パターン</th>
@@ -777,7 +779,7 @@ export function McpClient() {
       <td>Google公式のColab連携を最大限活用したい</td>
       <td><strong>パターンD</strong>（ただしPWAよりデスクトップアプリが適）</td>
     </tr>
-  </table>
+  </table></div>
 
   <p style="margin-top:1.5em;">最も現実的なのは、<strong>Colab上で <code>marimo edit --mcp</code> を起動し、そのHTTPエンドポイントをPWAから <code>use-mcp</code> などのブラウザクライアントで接続するパターンA/B</strong> です。開発時はColabのプロキシURLを手動入力し、本番運用時にはCloudflare Tunnel等で固定URL化することで、PWAからのシームレスな連携が実現できます。</p>
 </section>

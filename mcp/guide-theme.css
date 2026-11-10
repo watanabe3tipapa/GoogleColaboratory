@@ -1,0 +1,753 @@
+/* ==========================================================================
+   MCP guide theme — aligned with the Google Colab Archives LP
+   Loaded after each guide's own stylesheet as an override layer.
+   ========================================================================== */
+
+:root {
+  --lp-bg: #f5f0e8;
+  --lp-ink: #111111;
+  --lp-yellow: #ffe66d;
+  --lp-green: #d9f99d;
+  --lp-pink: #ff8fab;
+  --lp-red: #b91c1c;
+  --lp-blue: #e0e7ff;
+  --lp-mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  --lp-sans: "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Remap the guides' own design tokens */
+  --bg: var(--lp-bg);
+  --surface: #ffffff;
+  --ink: var(--lp-ink);
+  --muted: #555555;
+  --accent: var(--lp-red);
+  --accent-weak: var(--lp-blue);
+  --accent-mid: var(--lp-yellow);
+  --line: #111111;
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --bg-deep: var(--lp-bg);
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-code: #ffffff;
+  --ink-secondary: #333333;
+  --ink-muted: #555555;
+  --accent-glow: var(--lp-yellow);
+  --line-subtle: #111111;
+  --radius: 0;
+  --radius-sm: 0;
+  --shadow: none;
+}
+
+html,
+body {
+  background: var(--lp-bg) !important;
+  color: var(--lp-ink) !important;
+}
+
+body {
+  font-family: var(--lp-sans) !important;
+  line-height: 1.8 !important;
+  padding: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Hero header
+   -------------------------------------------------------------------------- */
+
+header {
+  background: var(--lp-yellow) !important;
+  color: var(--lp-ink) !important;
+  border: 4px solid var(--lp-ink) !important;
+  box-shadow: 10px 10px 0 0 var(--lp-ink) !important;
+  max-width: 1000px !important;
+  margin: 32px auto !important;
+  padding: 36px 40px !important;
+  position: relative !important;
+  overflow: visible !important;
+  text-align: left !important;
+}
+
+header::before,
+header::after {
+  display: none !important;
+}
+
+header .header-inner {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: static !important;
+  text-align: left !important;
+}
+
+header h1 {
+  color: var(--lp-ink) !important;
+  font-size: clamp(2rem, 5vw, 2.8rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -1px !important;
+  line-height: 1.1 !important;
+  margin: 0 0 14px !important;
+  max-width: none !important;
+}
+
+header h1 span {
+  color: var(--lp-red) !important;
+}
+
+header .subtitle,
+header .lead {
+  color: var(--lp-ink) !important;
+  opacity: 0.8;
+  font-weight: 600 !important;
+  font-size: 1.05rem !important;
+  max-width: 60ch !important;
+  margin: 0 !important;
+  line-height: 1.7 !important;
+}
+
+header p.meta {
+  display: inline-block !important;
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  box-shadow: 4px 4px 0 0 var(--lp-ink) !important;
+  padding: 6px 14px !important;
+  margin: 18px 0 0 !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: var(--lp-ink) !important;
+}
+
+header div.meta,
+header .hero-meta {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  margin-top: 18px !important;
+}
+
+header div.meta span,
+header .hero-meta span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  box-shadow: 4px 4px 0 0 var(--lp-ink) !important;
+  padding: 6px 14px !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: var(--lp-ink) !important;
+}
+
+header .hero-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0 0 var(--lp-ink) !important;
+  padding: 6px 14px !important;
+  margin-bottom: 18px !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: var(--lp-ink) !important;
+}
+
+header .hero-badge .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 2px var(--lp-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Layout and sections
+   -------------------------------------------------------------------------- */
+
+main {
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+  padding: 0 20px 20px !important;
+}
+
+main > section {
+  position: relative !important;
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  box-shadow: 6px 6px 0 0 var(--lp-ink) !important;
+  border-radius: 0 !important;
+  padding: 28px 30px !important;
+  margin: 0 0 36px !important;
+}
+
+/* CMS guide: number is a direct child of section */
+main > section > .section-num {
+  position: absolute !important;
+  left: 30px !important;
+  top: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--lp-ink) !important;
+  color: #ffffff !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.85rem !important;
+  font-weight: 800 !important;
+}
+
+main > section > h2 {
+  padding-left: 46px !important;
+}
+
+/* marimo / PWA guides: number lives inside .section-header */
+.section-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 0 18px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.section-header .section-number,
+.section-header .section-num {
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 40px !important;
+  height: 34px !important;
+  padding: 0 10px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--lp-ink) !important;
+  color: #ffffff !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  text-align: center !important;
+}
+
+.section-header h2 {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+main h2 {
+  color: var(--lp-ink) !important;
+  font-size: 1.5rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.5px !important;
+  line-height: 1.3 !important;
+  margin: 0 0 18px !important;
+}
+
+main h3 {
+  color: var(--lp-ink) !important;
+  font-size: 1.12rem !important;
+  font-weight: 900 !important;
+  line-height: 1.4 !important;
+  margin: 28px 0 12px !important;
+  padding-left: 12px !important;
+  border-left: 6px solid var(--lp-ink) !important;
+}
+
+main h4 {
+  color: var(--lp-ink) !important;
+  font-size: 1rem !important;
+  font-weight: 800 !important;
+  margin: 20px 0 8px !important;
+}
+
+main p {
+  color: #222222 !important;
+  font-size: 1rem !important;
+  line-height: 1.85 !important;
+  max-width: 70ch !important;
+  margin: 0 0 1em !important;
+}
+
+main ul,
+main ol {
+  margin: 0.8rem 0 1rem 1.4rem !important;
+  padding-left: 0.4rem !important;
+}
+
+main li {
+  margin-bottom: 0.4em !important;
+  line-height: 1.8 !important;
+}
+
+main a {
+  color: var(--lp-red) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+
+main a:hover {
+  background: var(--lp-yellow) !important;
+  color: var(--lp-ink) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Code
+   -------------------------------------------------------------------------- */
+
+main code {
+  font-family: var(--lp-mono) !important;
+}
+
+main :not(pre) > code {
+  background: var(--lp-blue) !important;
+  color: var(--lp-ink) !important;
+  border: 2px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  padding: 1px 5px !important;
+  font-size: 0.88em !important;
+}
+
+main pre {
+  background: #ffffff !important;
+  color: var(--lp-ink) !important;
+  border: 3px solid var(--lp-ink) !important;
+  box-shadow: 5px 5px 0 0 var(--lp-ink) !important;
+  border-radius: 0 !important;
+  padding: 18px !important;
+  margin: 1.2rem 0 !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.85rem !important;
+  line-height: 1.7 !important;
+  overflow-x: auto !important;
+}
+
+main pre code {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+}
+
+/* Keep syntax colours readable on the light code background */
+.kw { color: #7c3aed !important; }
+.fn { color: #1d4ed8 !important; }
+.str { color: #047857 !important; }
+.cmt { color: #6b7280 !important; }
+.num { color: #b45309 !important; }
+.cls { color: #a16207 !important; }
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+
+main table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  box-shadow: 5px 5px 0 0 var(--lp-ink) !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  margin: 1.2rem 0 !important;
+  font-size: 0.9rem !important;
+}
+
+main th,
+main td {
+  border: 2px solid var(--lp-ink) !important;
+  padding: 8px 10px !important;
+  text-align: left !important;
+  vertical-align: top !important;
+}
+
+main th {
+  background: var(--lp-ink) !important;
+  color: #ffffff !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.78rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+main tr:hover td {
+  background: #fff7cc !important;
+}
+
+main tr:last-child td {
+  border-bottom: 2px solid var(--lp-ink) !important;
+}
+
+main .table-wrap {
+  overflow-x: auto !important;
+  margin: 1.2rem 0 !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --------------------------------------------------------------------------
+   Callouts and cards
+   -------------------------------------------------------------------------- */
+
+main .callout {
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  border-left-width: 12px !important;
+  border-radius: 0 !important;
+  box-shadow: 5px 5px 0 0 var(--lp-ink) !important;
+  padding: 14px 16px !important;
+  margin: 1.2rem 0 !important;
+  color: var(--lp-ink) !important;
+  font-size: 0.95rem !important;
+}
+
+main .callout.info,
+main .callout-info {
+  border-left-color: #4ade80 !important;
+}
+
+main .callout.warn,
+main .callout-warn {
+  border-left-color: var(--lp-yellow) !important;
+}
+
+main .callout.danger,
+main .callout-danger {
+  border-left-color: var(--lp-pink) !important;
+}
+
+main .callout.success,
+main .callout-success {
+  border-left-color: #4ade80 !important;
+}
+
+main .callout-title {
+  font-family: var(--lp-mono) !important;
+  font-weight: 800 !important;
+  font-size: 0.8rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 6px !important;
+  color: var(--lp-ink) !important;
+}
+
+main .callout .callout-title,
+main .callout.info .callout-title,
+main .callout.success .callout-title,
+main .callout.warn .callout-title,
+main .callout.danger .callout-title {
+  color: var(--lp-ink) !important;
+}
+
+main .card {
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 6px 6px 0 0 var(--lp-ink) !important;
+  padding: 18px !important;
+  margin-bottom: 1.2rem !important;
+}
+
+main .card-title {
+  font-weight: 900 !important;
+  font-size: 1rem !important;
+}
+
+main .card-title .icon,
+main .card-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--lp-ink) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Tags, chips, labels
+   -------------------------------------------------------------------------- */
+
+main .tag {
+  display: inline-block !important;
+  border: 2px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  padding: 2px 8px !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+}
+
+main .tag-blue {
+  background: var(--lp-blue) !important;
+  color: var(--lp-ink) !important;
+}
+
+main .tag-green {
+  background: var(--lp-green) !important;
+  color: var(--lp-ink) !important;
+}
+
+main .tag-amber {
+  background: var(--lp-yellow) !important;
+  color: var(--lp-ink) !important;
+}
+
+main .tag-red {
+  background: var(--lp-pink) !important;
+  color: var(--lp-ink) !important;
+}
+
+/* Recommendation / status pills inside cards */
+main .card-badge {
+  display: inline-block !important;
+  margin-left: auto !important;
+  border: 2px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  padding: 2px 8px !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  box-shadow: 2px 2px 0 0 var(--lp-ink) !important;
+}
+
+main .card-badge.recommended {
+  background: var(--lp-green) !important;
+  color: var(--lp-ink) !important;
+}
+
+main .card-badge.simple {
+  background: var(--lp-blue) !important;
+  color: var(--lp-ink) !important;
+}
+
+main .card-badge.advanced {
+  background: var(--lp-yellow) !important;
+  color: var(--lp-ink) !important;
+}
+
+main .source-chip,
+main .code-label {
+  display: inline-block !important;
+  background: #ffffff !important;
+  color: var(--lp-ink) !important;
+  border: 2px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 0 var(--lp-ink) !important;
+  padding: 3px 8px !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+main .accent-word {
+  color: var(--lp-red) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Architecture diagrams
+   -------------------------------------------------------------------------- */
+
+main .arch-diagram {
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 5px 5px 0 0 var(--lp-ink) !important;
+  color: var(--lp-ink) !important;
+  padding: 18px !important;
+  margin: 1.2rem 0 !important;
+}
+
+main .arch-diagram .box-pwa { color: #1d4ed8 !important; }
+main .arch-diagram .box-pub { color: #b45309 !important; }
+main .arch-diagram .box-colab { color: #047857 !important; }
+main .arch-diagram .arrow { color: var(--lp-ink) !important; }
+
+main .arch-box {
+  background: #ffffff !important;
+  color: var(--lp-ink) !important;
+  border: 3px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 0 var(--lp-ink) !important;
+}
+
+main .arch-box.pwa { background: var(--lp-blue) !important; }
+main .arch-box.colab { background: var(--lp-yellow) !important; }
+main .arch-box.gpu { background: var(--lp-green) !important; }
+main .arch-box.arrow {
+  background: var(--lp-bg) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--lp-ink) !important;
+}
+
+/* marimo guide uses .box with component names */
+main .arch-diagram .box {
+  display: inline-block !important;
+  border: 3px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 0 var(--lp-ink) !important;
+  padding: 0.25em 0.7em !important;
+  color: var(--lp-ink) !important;
+  font-weight: 800 !important;
+}
+
+main .arch-diagram .box.pwa { background: var(--lp-yellow) !important; }
+main .arch-diagram .box.colab { background: var(--lp-blue) !important; }
+main .arch-diagram .box.marimo { background: var(--lp-green) !important; }
+main .arch-diagram .box.tunnel { background: var(--lp-pink) !important; }
+main .arch-diagram .box.bridge { background: #ffffff !important; }
+
+/* Code inside a card: avoid a second shadowed box */
+main .card pre {
+  box-shadow: none !important;
+  border-width: 2px !important;
+}
+
+main .arch-label {
+  color: #555555 !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.75rem !important;
+}
+
+/* marimo guide comparison blocks */
+main .compare-grid {
+  display: grid !important;
+  gap: 16px !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  margin: 1.2rem 0 !important;
+}
+
+main .compare-item {
+  background: #ffffff !important;
+  border: 3px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 5px 5px 0 0 var(--lp-ink) !important;
+  padding: 16px !important;
+}
+
+main .pattern-label,
+main .rec-badge {
+  display: inline-block !important;
+  background: var(--lp-yellow) !important;
+  color: var(--lp-ink) !important;
+  border: 2px solid var(--lp-ink) !important;
+  border-radius: 0 !important;
+  padding: 2px 8px !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+}
+
+main .step-list {
+  margin: 0.8rem 0 1rem 1.4rem !important;
+  padding-left: 0.4rem !important;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+footer {
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+  padding: 20px !important;
+  border-top: 4px solid var(--lp-ink) !important;
+  color: #555555 !important;
+  font-family: var(--lp-mono) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  header {
+    margin: 20px 14px !important;
+    padding: 26px 22px !important;
+    box-shadow: 7px 7px 0 0 var(--lp-ink) !important;
+  }
+
+  main {
+    padding: 0 14px 20px !important;
+  }
+
+  main > section {
+    padding: 22px 18px !important;
+  }
+
+  main > section > .section-num {
+    left: 18px !important;
+    top: 22px !important;
+  }
+
+  main > section > h2 {
+    padding-left: 46px !important;
+  }
+
+  main h2 {
+    font-size: 1.25rem !important;
+  }
+
+  main .section-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    text-align: left !important;
+  }
+
+  main .section-header h2 {
+    text-align: left !important;
+  }
+
+  main .table-wrap {
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  main .table-wrap table {
+    min-width: 620px !important;
+  }
+
+  main .arch-diagram {
+    font-size: 0.75rem !important;
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  header,
+  main > section,
+  main .card,
+  main .callout,
+  main pre,
+  main table,
+  main .arch-diagram {
+    box-shadow: none !important;
+  }
+}

@@ -394,6 +394,8 @@ footer {
   .arch-diagram { font-size: 0.75em; }
 }
 </style>
+<link rel="stylesheet" href="guide-theme.css">
+
 </head>
 <body>
 
@@ -552,7 +554,7 @@ mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>)
     <span class="kw">return</span> {<span class="str">"message"</span>: <span class="str">"Colab CMS MCP Server is running"</span>}</code></pre>
 
   <h3>2.3 実装のポイント</h3>
-  <table>
+  <div class="table-wrap"><table>
     <thead>
       <tr><th>項目</th><th>内容</th></tr>
     </thead>
@@ -562,7 +564,7 @@ mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>)
       <tr><td><strong>公開</strong></td><td><code>pyngrok</code> で <code>localhost:8000</code> をインターネット公開。PWA はこの HTTPS URL に接続</td></tr>
       <tr><td><strong>認証</strong></td><td>必要に応じて <code>Authorization</code> ヘッダーを検証する Depends を <code>/mcp</code> やツール内に追加</td></tr>
     </tbody>
-  </table>
+  </table></div>
 </section>
 
 <section>
@@ -603,7 +605,7 @@ public_url = ngrok.connect(
   <p>出力された <code>https://abc123.trycloudflare.com/mcp</code> を PWA 側の <code>MCP_URL</code> に設定します。</p>
 
   <h3>3.3 公開手法の比較</h3>
-  <table>
+  <div class="table-wrap"><table>
     <thead>
       <tr><th>比較項目</th><th>ngrok</th><th>Cloudflare Tunnel</th></tr>
     </thead>
@@ -614,7 +616,7 @@ public_url = ngrok.connect(
       <tr><td>速度・安定性</td><td>良好</td><td>非常に良好</td></tr>
       <tr><td>Colab 相性</td><td>良好</td><td>良好</td></tr>
     </tbody>
-  </table>
+  </table></div>
 </section>
 
 <section>
@@ -773,7 +775,7 @@ mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>, dependencies=[Depends(
   <h2>運用の注意点と本番移行</h2>
 
   <h3>6.1 Colab 特有の制約</h3>
-  <table>
+  <div class="table-wrap"><table>
     <thead>
       <tr><th>リスク</th><th>対策</th></tr>
     </thead>
@@ -783,7 +785,7 @@ mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>, dependencies=[Depends(
       <tr><td><strong>データ転送上限</strong></td><td>ngrok 無料版は 1GB/月。CMS 利用なら十分だが、メディア配信には不向き</td></tr>
       <tr><td><strong>認証・認可</strong></td><td>公開 URL になった時点で誰でもアクセス可能。Bearer Token または MCP の OAuth 2.1 拡張を必ず実装</td></tr>
     </tbody>
-  </table>
+  </table></div>
 
   <div class="callout callout-danger">
     <div class="callout-title">重要</div>
@@ -803,7 +805,7 @@ mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>, dependencies=[Depends(
   </div>
 
   <h3>6.3 公開手法の選択まとめ</h3>
-  <table>
+  <div class="table-wrap"><table>
     <thead>
       <tr><th>用途</th><th>推奨手法</th><th>理由</th></tr>
     </thead>
@@ -813,7 +815,7 @@ mount_mcp(app, mcp, path=<span class="str">"/mcp"</span>, dependencies=[Depends(
       <tr><td><span class="tag tag-green">個人 CMS（非商用）</span></td><td>Colab + Tunnel + Drive</td><td>無料 GPU/CPU + 無料ストレージ</td></tr>
       <tr><td><span class="tag tag-red">本番・常時運用</span></td><td>Hugging Face Spaces / Render</td><td>セッション切断なし、常時 SSL、カスタムドメイン対応</td></tr>
     </tbody>
-  </table>
+  </table></div>
 </section>
 
 <section>
