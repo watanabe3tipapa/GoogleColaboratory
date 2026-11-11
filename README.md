@@ -23,6 +23,7 @@ Google Colab で使用したノートブックと技術ガイドを、用途ご�
 | mcp | [colab_mcp_marimo_pwa_architecture.ipynb](mcp/colab_mcp_marimo_pwa_architecture.ipynb) | marimo × PWA 調査のノートブック版 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_mcp_marimo_pwa_architecture.ipynb) |
 | mcp | [pwa_colab_connection_guide.ipynb](mcp/pwa_colab_connection_guide.ipynb) | PWA 接続ガイドのノートブック版 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/pwa_colab_connection_guide.ipynb) |
 | mcp | [colab_gui_desktop.ipynb](mcp/colab_gui_desktop.ipynb) | 仮想デスクトップ＋ブラウザ自動化デモ | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_gui_desktop.ipynb) |
+| verification | [houritsu_git.ipynb](verification/houritsu_git.ipynb) | e-Gov 法令検索 API から法令データを取得し、施行日ごとの Git 履歴として再構築する検証 | [開く](https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/verification/houritsu_git.ipynb) |
 
 ## ディレクトリ構成
 
@@ -33,6 +34,7 @@ Google Colab で使用したノートブックと技術ガイドを、用途ご�
 ├── data/      データ処理（路線・駅名）
 ├── llm/       LLM（Strata）
 ├── mcp/       MCP / 自動化（技術ガイド・GUI デスクトップ）
+├── verification/ 検証（法令データ × Git 履歴）
 ├── assets/    サイト用画像
 ├── index.qmd  サイトのトップページ
 ├── _quarto.yml

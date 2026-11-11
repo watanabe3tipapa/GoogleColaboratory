@@ -119,9 +119,9 @@ ul.task-list li input[type="checkbox"] {
   <h1 class="hero-title">Google Colab<br>Archives</h1>
   <p class="hero-lead">ワークショップや実験で使った Google Colab ノートブックと技術ガイドを、カテゴリー別に陳列したアーカイブです。気になるノートブックは、そのまま Colab で開いて実行できます。</p>
   <div class="hero-meta">
-    <span class="meta-pill"><span class="dot"></span>公開中: <strong>11</strong> ノートブック</span>
+    <span class="meta-pill"><span class="dot"></span>公開中: <strong>12</strong> ノートブック</span>
     <span class="meta-pill"><strong>3</strong> ガイド</span>
-    <span class="meta-pill"><strong>5</strong> カテゴリ</span>
+    <span class="meta-pill"><strong>6</strong> カテゴリ</span>
     <span class="meta-pill">Quarto + GitHub Pages</span>
   </div>
 </header>
@@ -134,9 +134,9 @@ ul.task-list li input[type="checkbox"] {
       <p class="panel-copy">main ブランチへの push をきっかけに、GitHub Actions がサイトを自動デプロイします。</p>
     </div>
     <div class="update-metrics">
-      <div class="metric"><span>収録</span><strong>11</strong></div>
+      <div class="metric"><span>収録</span><strong>12</strong></div>
       <div class="metric"><span>ガイド</span><strong>3</strong></div>
-      <div class="metric"><span>カテゴリ</span><strong>5</strong></div>
+      <div class="metric"><span>カテゴリ</span><strong>6</strong></div>
     </div>
   </div>
   <div class="change-area">
@@ -147,6 +147,7 @@ ul.task-list li input[type="checkbox"] {
       <li class="change-row"><span class="change-badge">data</span><strong>データ処理</strong><span class="change-version"><span class="version-chip">1 件</span></span></li>
       <li class="change-row"><span class="change-badge">llm</span><strong>LLM</strong><span class="change-version"><span class="version-chip">1 件</span></span></li>
       <li class="change-row"><span class="change-badge">mcp</span><strong>MCP / 自動化</strong><span class="change-version"><span class="version-chip">7 件</span></span></li>
+      <li class="change-row"><span class="change-badge">verification</span><strong>検証</strong><span class="change-version"><span class="version-chip">1 件</span></span></li>
     </ul>
   </div>
 </section>
@@ -360,6 +361,31 @@ ul.task-list li input[type="checkbox"] {
         <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/mcp/colab_gui_desktop.ipynb" target="_blank" rel="noopener">github ↗</a>
       </div>
       <div class="card-footer"><span class="prompt">$</span> mcp/<wbr>colab_gui_desktop.ipynb</div>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="verification">
+  <div class="section-header">
+    <h2 class="section-title anchored"><span class="section-number">06</span>検証</h2>
+    <p class="section-desc">データと履歴の正確性を確かめる</p>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title anchored">法令 × Git 履歴 <span class="tag">verify</span></h3>
+      </div>
+      <p class="card-body">e-Gov 法令検索 API から法令データを取得し、1法令=1Markdown・1コミット=1施行日として Git 履歴を構築する検証ノートブック。</p>
+      <div class="card-metrics">
+        <div><span class="label">Format</span><strong>.ipynb</strong></div>
+        <div><span class="label">Run</span><strong>Google Colab</strong></div>
+      </div>
+      <div class="platforms">
+        <a class="platform-link" href="https://colab.research.google.com/github/watanabe3tipapa/GoogleColaboratory/blob/main/verification/houritsu_git.ipynb" target="_blank" rel="noopener">colab ↗</a>
+        <a class="platform-link" href="verification/houritsu_git.html" target="_blank" rel="noopener">read ↗</a>
+        <a class="platform-link" href="https://github.com/watanabe3tipapa/GoogleColaboratory/blob/main/verification/houritsu_git.ipynb" target="_blank" rel="noopener">github ↗</a>
+      </div>
+      <div class="card-footer"><span class="prompt">$</span> verification/<wbr>houritsu_git.ipynb</div>
     </article>
   </div>
 </section>
